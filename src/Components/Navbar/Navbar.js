@@ -29,8 +29,8 @@ const NavBar = () => {
               </div>
               <nav className={`navbar-links ${isNavVisible ? 'show' : ''}`}>
                 <a href="/home" className="nav-link">Home</a>
-                <a href="/about" className="nav-link">Alle publications</a>
-                <a href="/contact" className="nav-link">Create</a>
+                <a href="/All" className="nav-link">Alle publications</a>
+                <a href="/create" className="nav-link">Create</a>
               </nav>
             </Grid>
             <Grid item ml="auto">
