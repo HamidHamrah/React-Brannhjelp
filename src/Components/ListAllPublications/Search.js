@@ -1,11 +1,35 @@
 import React, { useState, useEffect } from 'react';
 
 const articles = [
-  { id: 1, title: 'Article 1', content: 'Content of Article 1.' },
-  { id: 2, title: 'Article 2', content: 'Content of Article 2.' },
+  { id: 1, title: 'Article 1', content: 'Hamid.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 1, title: 'Article 1', content: 'Hamid.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 1, title: 'Article 1', content: 'Hamid.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 1, title: 'Article 1', content: 'Hamid.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 1, title: 'Article 1', content: 'Hamid.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 1, title: 'Article 1', content: 'Hamid.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  { id: 2, title: 'Article 2', content: 'Content of Hello 2.' },
+  
+
 ];
 
-const ArticleContent = ({ content }) => <div>{content}</div>;
+const ArticleContent = ({content }) => <div>{content}</div>;
 
 const Sidebar = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,7 +48,7 @@ const Sidebar = () => {
   const isMobile = windowWidth < 768;
 
   const filteredArticles = articles.filter(article =>
-    article.title.toLowerCase().includes(searchTerm.toLowerCase())
+    article.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -48,6 +72,7 @@ const Sidebar = () => {
       </div>
       {!isMobile && selectedArticleId && (
         <div className="article-content">
+          <ArticleContent content={articles.find(article => article.id === selectedArticleId)?.title} />
           <ArticleContent content={articles.find(article => article.id === selectedArticleId)?.content} />
         </div>
       )}

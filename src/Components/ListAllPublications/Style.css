@@ -3,21 +3,26 @@
 }
 
 .search-container {
-  padding: 20px;
-  background-color: #f0f0f0;
-  margin: 10px;
+  padding: 10px;
+  background-color: #f10000;
 }
 
 .search-input {
-  width: 100%;
+  width:100%;
   padding: 10px;
   margin-bottom: 20px;
   box-sizing: border-box;
 }
-
 .articles-list {
-  padding: 20px;
+  padding: 10px;
+  background-color: #e0e0e0; /* Gray background */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  border-radius: 4px; /* Rounded corners */
+  max-height: 400px; /* Or adjust based on your layout */
+  overflow-y: auto; /* Show scrollbar when needed */
+  margin-bottom: 20px; /* Space below the list */
 }
+
 
 .article-title {
   cursor: pointer;
@@ -26,25 +31,32 @@
   padding: 10px;
   border-radius: 4px;
 }
-
-.article-detail {
-  background-color: #fff9c4; /* Yellowish background */
-  padding: 10px;
-  border: 1px solid #ccc; /* Very thin border */
-  margin-bottom: 20px;
-}
 .layout-container {
   display: flex;
   flex-direction: column;
 }
 
 @media (min-width: 768px) {
+  .sidebar, .articles-list {
+    /* You can set a specific max-height here if needed for larger screens */
+    max-height: 600px; /* Adjust based on the expected screen size and layout */
+    overflow-y: auto; /* Maintain scrollbar functionality */
+  }
+
   .layout-container {
     flex-direction: row;
   }
 
   .search-and-list {
-    width: 30%;
+    width:25%;
+    margin-left: 10px;
+    margin-top: 10px ;
+    margin-bottom: 10px;
+    padding: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    border-radius: 4px; /* Rounded corners */
+    overflow-y: auto; /* Show scrollbar when needed */
+    height: 100vh;
   }
 
   .article-content {
@@ -53,4 +65,3 @@
   }
 }
 
-/* Add other styles as previously defined */
