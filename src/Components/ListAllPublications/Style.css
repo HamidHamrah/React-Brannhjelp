@@ -1,64 +1,56 @@
 .sidebar-container {
-  display: flex;
-  max-width: 100%;
-}
-
-.sidebar {
-  width: 250px; /* Adjust the width as needed */
-  background-color: #f0f0f0; /* Light grey for the sidebar */
-  padding: 20px;
-  height: 100vh; /* Full height of the viewport */
-  overflow-y: auto; /* Adds scroll to the sidebar if content overflows */
-}
-
-.article-content {
-  flex-grow: 1; /* Takes up remaining space */
-  background-color: #ffffff; /* White for the article content area */
-  padding: 20px;
-  height: 100vh; /* Full height of the viewport */
-  overflow-y: auto; /* Adds scroll to the content area if content overflows */
+  width: 100%;
 }
 
 .search-container {
-  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  margin: 10px;
 }
 
 .search-input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 20px; /* Adds some space below the search input */
-  box-sizing: border-box; /* Ensures padding does not add to the width */
+  margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
-.sidebar-item {
-  cursor: pointer;
-  margin-bottom: 10px; /* Adds some space between sidebar items */
-}
-
-.sidebar-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 0; /* Adds some padding around the title */
-}
-
-.sidebar-content {
-  padding: 10px;
-  background-color: #e9e9e9; /* Slightly darker than sidebar for contrast */
-}
-
-/* Adjusts the color of the sidebar-icon based on whether the item is open or not */
-.sidebar-icon {
-  font-size: 0.8em; /* Smaller font size for the icons */
-}
-.article-content {
-  flex-grow: 1; /* Takes up remaining space */
-  background-color: #ffffff; /* Yellowish background */
-  margin: 30px;
+.articles-list {
   padding: 20px;
-  height: 80vh; /* Full height of the viewport */
-  overflow-y: auto; /* Adds scroll to the content area if content overflows */
-  border: 1px solid #8d7f7f; /* Very thin border line */
-  border-radius: 0.25rem;
-  box-shadow: 0 2px 4px rgba(168, 129, 20, 0.1); /* Optional: Adds a subtle shadow for depth */
 }
+
+.article-title {
+  cursor: pointer;
+  margin-bottom: 10px;
+  background-color: #e9e9e9;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.article-detail {
+  background-color: #fff9c4; /* Yellowish background */
+  padding: 10px;
+  border: 1px solid #ccc; /* Very thin border */
+  margin-bottom: 20px;
+}
+.layout-container {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .layout-container {
+    flex-direction: row;
+  }
+
+  .search-and-list {
+    width: 30%;
+  }
+
+  .article-content {
+    flex-grow: 1;
+    padding-left: 20px; /* Or appropriate spacing */
+  }
+}
+
+/* Add other styles as previously defined */
