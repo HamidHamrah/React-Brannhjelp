@@ -8,19 +8,26 @@
 }
 
 .search-input {
-  width:100%;
+  width: 100%;
   padding: 10px;
   margin-bottom: 20px;
   box-sizing: border-box;
 }
+
 .articles-list {
   padding: 10px;
-  background-color: #e0e0e0; /* Gray background */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-  border-radius: 4px; /* Rounded corners */
-  max-height: 400px; /* Or adjust based on your layout */
-  overflow-y: auto; /* Show scrollbar when needed */
-  margin-bottom: 20px; /* Space below the list */
+  background-color: #e0e0e0;
+  /* Gray background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
+  border-radius: 4px;
+  /* Rounded corners */
+  max-height: 400px;
+  /* Or adjust based on your layout */
+  overflow-y: auto;
+  /* Show scrollbar when needed */
+  margin-bottom: 20px;
+  /* Space below the list */
 }
 
 
@@ -31,16 +38,44 @@
   padding: 10px;
   border-radius: 4px;
 }
+
 .layout-container {
   display: flex;
   flex-direction: column;
 }
 
+.article-title {
+  /* Specific styles for the title */
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333;
+  background-color: rgb(250, 250, 245);
+  width: 95%;
+  padding: 10px;
+  margin: 10px;
+}
+
+.article-body {
+  /* Specific styles for the body/content */
+  font-size: 16;
+  line-height: 1.6;
+  color: #000000;
+  background-color: rgb(250, 250, 245);
+  width: 95%;
+  height: 70%;
+  padding: 10px;
+  margin: 10px;
+}
+
 @media (min-width: 768px) {
-  .sidebar, .articles-list {
+
+  .sidebar,
+  .articles-list {
     /* You can set a specific max-height here if needed for larger screens */
-    max-height: 600px; /* Adjust based on the expected screen size and layout */
-    overflow-y: auto; /* Maintain scrollbar functionality */
+    max-height: 600px;
+    /* Adjust based on the expected screen size and layout */
+    overflow-y: auto;
+    /* Maintain scrollbar functionality */
   }
 
   .layout-container {
@@ -48,20 +83,23 @@
   }
 
   .search-and-list {
-    width:25%;
+    width: 25%;
     margin-left: 10px;
-    margin-top: 10px ;
+    margin-top: 10px;
     margin-bottom: 10px;
     padding: 2px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-    border-radius: 4px; /* Rounded corners */
-    overflow-y: auto; /* Show scrollbar when needed */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    border-radius: 4px;
+    /* Rounded corners */
+    overflow-y: auto;
+    /* Show scrollbar when needed */
     height: 100vh;
   }
 
   .article-content {
     flex-grow: 1;
-    padding-left: 20px; /* Or appropriate spacing */
+    padding-left: 20px;
+    /* Or appropriate spacing */
   }
 }
-
