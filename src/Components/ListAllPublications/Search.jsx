@@ -1,44 +1,35 @@
 import React, { useState, useEffect } from 'react';
-
-// Mock data for articles
-const articles = [
-  { id: 1, title: 'Article 1', content: 'Content of Article 1.' },
-  { id: 2, title: 'Article 2', content: 'Content of Article 2.' },
-  // ...add more articles as needed
-];
-
-const ArticleContent = ({ title, content }) => {
-  if (!title && !content) return <div className="article-content-empty">Select an article to read.</div>;
-
-  return (
-    <div className="article-content">
-      <h2 className="article-title">{title}</h2>
-      <p className="article-body">{content}</p>
-    </div>
-  );
-};
+import axios from 'axios';
 
 const Sidebar = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [articles, setArticles] = useState([]);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const handleResize = () => {
-    setWindowWidth(window.innerWidth);
-  };
-
   useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const isMobile = windowWidth < 768;
+  // Fetch articles from API using Axios
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get('https://localhost:7207/api/publications'); // Replace YOUR_API_ENDPOINT with your actual endpoint
+        setArticles(response.data);
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+      }
+    };
+    fetchArticles();
+  }, []);
 
+  const isMobile = windowWidth < 768;
   const filteredArticles = articles.filter(article =>
     article.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  // Find the selected article
   const selectedArticle = articles.find(article => article.id === selectedArticleId);
 
   return (
@@ -55,15 +46,19 @@ const Sidebar = () => {
           <div key={article.id} className="article-title" onClick={() => setSelectedArticleId(article.id)}>
             {article.title}
             {isMobile && selectedArticleId === article.id && (
-              // Render ArticleContent for mobile view inline
-              <ArticleContent title={article.title} content={article.content} />
+              <div className="article-content">
+                <h2 className="article-title">{article.title}</h2>
+                <p className="article-body">{article.content}</p>
+              </div>
             )}
           </div>
         ))}
       </div>
       {!isMobile && selectedArticle && (
-        // Render ArticleContent for desktop view
-        <ArticleContent title={selectedArticle.title} content={selectedArticle.content} />
+        <div className="article-content">
+          <h2 className="article-title">{selectedArticle.title}</h2>
+          <p className="article-body">{selectedArticle.content}</p>
+        </div>
       )}
     </div>
   );

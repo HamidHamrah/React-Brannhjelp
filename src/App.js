@@ -4,6 +4,7 @@ import Create from './Pages/Create';
 import AllPub from "./Pages/ListAllpublications"
 import './Components/Navbar/NavbarStyle.css';
 import './Components/ListAllPublications/Style.css';
+import "./Components/Create/Create.css"
 
 function App() {
   return (
