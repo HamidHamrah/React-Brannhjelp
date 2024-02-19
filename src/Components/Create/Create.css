@@ -28,12 +28,11 @@
   }
   
   .article-form button {
-    padding: 10px 20px;
+    padding: 15px 25px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
   }
   
   .article-form button:hover {
