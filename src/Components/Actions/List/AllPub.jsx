@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { useNavigate } from 'react-router-dom'; // Importing useNavigate from React Router
+
 
 export default function Read() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
-  const [sortDirection, setSortDirection] = useState('asc'); // 'asc' for ascending, 'desc' for descending
+  const [sortDirection, setSortDirection] = useState('asc');
   const UserID = 'Hamid'; // This should dynamically set after implementing authentication
-
-
+  const navigate = useNavigate(); // Using useNavigate hook
+  
   useEffect(() => {
     fetch('https://localhost:7207/api/Publications')
       .then((response) => response.json())
@@ -25,13 +24,14 @@ export default function Read() {
   const toggleSortDirection = () => {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
+
   const sortedData = [...data].sort((a, b) => {
-    if (sortDirection === 'asc') {
-      return a.id - b.id;
-    } else {
-      return b.id - a.id;
-    }
+    return sortDirection === 'asc' ? a.id - b.id : b.id - a.id;
   });
+
+  const handleUpdate = (id) => {
+    navigate("../Update/Update/${id}?UserId=${UserID}"); // Navigate to the update component with the article ID and UserID
+  };
 
 
   const handleClickOpen = (id) => {
@@ -49,6 +49,7 @@ export default function Read() {
     setOpen(false);
   };
 
+
   const handleDelete = () => {
     if (!selectedPublication) return;
 
@@ -64,23 +65,15 @@ export default function Read() {
 
   
   return (
-    <div>
+     <div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Delete Publication</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete this publication?
-          <p>ID: {selectedPublication?.id}</p>
-          <p>Title: {selectedPublication?.title}</p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} color="error">Delete</Button>
-        </DialogActions>
+        {/* Dialog content */}
       </Dialog>
       <table>
         <thead>
           <tr>
-            <th>ID
+            <th>
+              ID
               <Button onClick={toggleSortDirection} size="small">
                 {sortDirection === 'asc' ? <ArrowUpwardIcon fontSize="small" /> : <ArrowDownwardIcon fontSize="small" />}
               </Button>
@@ -95,8 +88,8 @@ export default function Read() {
               <td>{item.id}</td>
               <td>{item.title}</td>
               <td>
-                <Button style={{ marginRight: '10px' }}>Update</Button>
-                <Button onClick={() => handleClickOpen(item.id)} color="error">Delete</Button>
+                <Button onClick={() => handleUpdate(item.id)} style={{ marginRight: '10px' }}>Update</Button>
+                <Button onClick={() => handleDelete(item.id)} color="error">Delete</Button>
               </td>
             </tr>
           ))}
@@ -104,4 +97,5 @@ export default function Read() {
       </table>
     </div>
   );
+    
 }

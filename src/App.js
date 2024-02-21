@@ -3,12 +3,14 @@ import Home from "./Pages/Home"
 import Create from './Pages/Create';
 import AllPub from "./Pages/ListAllpublications"
 import './Components/Navbar/NavbarStyle.css';
-import './Components/ListAllPublications/Search.css';
-import "./Components/Create/Create.css"
+import './Components/Actions/Search/Search.css';
+import "./Components/Actions/Create/Create.css"
 import "./Components/Authentication/Login.css"
-import "./Components/ListAllPublications/AllPub.css"
+import "./Components/Actions/List/AllPub.css"
 import Login from './Components/Authentication/Login';
 import Register from './Components/Authentication/Register';
+import Update from "./Components/Actions/Update/Update"
+
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
             <Route path='/All' element={<AllPub />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
+            <Route path="/Update" element={<Update />} />
           </Routes>
         </BrowserRouter>
     </div>
