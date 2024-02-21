@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import styles from './Create.module.css';
+import styles from './Create.css';
 
 
 //useState hooks for bruker innput

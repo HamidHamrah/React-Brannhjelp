@@ -17,7 +17,7 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await axios.get('https://localhost:7207/api/publications'); // Replace YOUR_API_ENDPOINT with your actual endpoint
+        const response = await axios.get('https://localhost:7207/api/publications'); 
         setArticles(response.data);
       } catch (error) {
         console.error('Error fetching articles:', error);

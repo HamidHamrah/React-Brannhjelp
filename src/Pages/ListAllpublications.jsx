@@ -1,14 +1,11 @@
 import NavBar from "../Components/Navbar/Navbar";
 import React from 'react'
-import Read from "../Components/ListAllPublications/Read";
-
-
+import AllPub from "../Components/ListAllPublications/AllPub";
 export default function ListAllpublications() {
   return (
     <div>
       <NavBar />
-      <h1>All Publications</h1>
-      <Read />
+      <AllPub />
     </div>
   )
 }

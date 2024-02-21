@@ -16,7 +16,7 @@ const NavBar = () => {
 
   // Function to navigate to the login/register page
   const navigateToLoginRegister = () => {
-    navigate('/login-register'); // Adjust the path as needed
+    navigate('/Login'); // Adjust the path as needed
   };
 
   return (
@@ -41,8 +41,8 @@ const NavBar = () => {
             </nav>
           </Grid>
           <Grid item ml="auto">
-            {/* Updated Button to use navigateToLoginRegister */}
-            <Button href='/Login' variant="outlined" color="primary" className={`navbar-login ${isNavVisible ? 'show' : ''}`} onClick={navigateToLoginRegister}>Login</Button>
+            {/* Button updated to use navigateToLoginRegister for navigation */}
+            <Button variant="outlined" color="primary" className={`navbar-login ${isNavVisible ? 'show' : ''}`} onClick={navigateToLoginRegister}>Login</Button>
           </Grid>
         </Grid>
       </Container>
@@ -51,3 +51,4 @@ const NavBar = () => {
 };
 
 export default NavBar;
+

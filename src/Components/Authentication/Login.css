@@ -1,0 +1,101 @@
+/* Base styles */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+.parent-container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  height: 100vh; /* Full viewport height; adjust as needed */
+}
+.parent-container {
+  display: grid;
+  place-items: center; /* Shortcut for both horizontal and vertical centering */
+  height: 100vh; /* Full viewport height; adjust as needed */
+}
+
+
+section {
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  padding: 50px;
+  margin: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Form and elements styling */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 15px;
+}
+
+input[type="text"], input[type="password"], button {
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #004494;
+}
+
+/* Error message and links */
+.errmsg, .offscreen {
+  font-size: 0.9em;
+}
+
+.errmsg {
+  color: red;
+  margin-bottom: 15px;
+}
+
+.Register a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.Register a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  body, html {
+      padding: 20px;
+  }
+
+  section {
+      padding: 15px;
+      margin: 5px;
+  }
+
+  form {
+      width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+      font-size: 1.5em;
+  }
+
+  label, input[type="text"], input[type="password"], button {
+      font-size: 0.9em;
+  }
+}

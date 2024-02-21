@@ -1,0 +1,19 @@
+/* Styles for the table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd; /* Light gray bottom border for table rows */
+}
+
+th {
+  background-color: #f2f2f2; /* Light gray background for header */
+}
+
+
