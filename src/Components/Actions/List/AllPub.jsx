@@ -30,7 +30,8 @@ export default function Read() {
   });
 
   const handleUpdate = (id) => {
-    navigate("../Update/Update/${id}?UserId=${UserID}"); // Navigate to the update component with the article ID and UserID
+    // Correct use of template literals with backticks and placeholders
+    navigate(`/update/${id}?UserId=${UserID}`);
   };
 
 

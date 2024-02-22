@@ -9,8 +9,8 @@ import "./Components/Authentication/Login.css"
 import "./Components/Actions/List/AllPub.css"
 import Login from './Components/Authentication/Login';
 import Register from './Components/Authentication/Register';
-import Update from "./Components/Actions/Update/Update"
-
+import Update from "./Pages/Update"
+import "./Components/Actions/Update/Update.css"
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
             <Route path='/All' element={<AllPub />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
-            <Route path="/Update" element={<Update />} />
+            <Route path="/update/:id" element={<Update />} />
           </Routes>
         </BrowserRouter>
     </div>
