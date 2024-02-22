@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Box, TextField, List, ListItem, ListItemText, Typography } from '@mui/material';
 
 const Sidebar = () => {
   const [articles, setArticles] = useState([]);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Fetch articles from API using Axios
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await axios.get('https://localhost:7207/api/publications'); 
+        const response = await axios.get('https://localhost:7207/api/publications');
         setArticles(response.data);
       } catch (error) {
         console.error('Error fetching articles:', error);
@@ -26,41 +19,39 @@ const Sidebar = () => {
     fetchArticles();
   }, []);
 
-  const isMobile = windowWidth < 768;
   const filteredArticles = articles.filter(article =>
     article.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const selectedArticle = articles.find(article => article.id === selectedArticleId);
 
   return (
-    <div className="layout-container">
-      <div className="search-and-list">
-        <input
-          type="text"
+    <Box className="layout-container" sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, height: '100vh', overflow: 'hidden' }}>
+      <Box className="search-and-list" sx={{ width: { xs: '100%', md: '25%' }, flexShrink: 0, maxHeight: '100vh', overflowY: 'auto' }}>
+        <TextField
+          fullWidth
+          variant="outlined"
           placeholder="Search"
-          className="search-input"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ mb: 2 }}
         />
-        {filteredArticles.map((article) => (
-          <div key={article.id} className="article-title" onClick={() => setSelectedArticleId(article.id)}>
-            {article.title}
-            {isMobile && selectedArticleId === article.id && (
-              <div className="article-content">
-                <h2 className="article-title">{article.title}</h2>
-                <p className="article-body">{article.content}</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      {!isMobile && selectedArticle && (
-        <div className="article-content">
-          <h2 className="article-title">{selectedArticle.title}</h2>
-          <p className="article-body">{selectedArticle.content}</p>
-        </div>
-      )}
-    </div>
+        <List>
+          {filteredArticles.map((article) => (
+            <ListItem button key={article.id} onClick={() => setSelectedArticleId(article.id)} sx={{ mb: 1, bgcolor: 'background.paper' }}>
+              <ListItemText primary={article.title} />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+      <Box className="article-content" sx={{ flexGrow: 1, minWidth: { md: '500px' }, maxWidth: { md: '70%' }, overflowY: 'auto', p: 3 }}>
+        {selectedArticle && (
+          <>
+            <Typography variant="h5" component="h2" className="article-title">{selectedArticle.title}</Typography>
+            <Typography variant="body1" className="article-body">{selectedArticle.content}</Typography>
+          </>
+        )}
+      </Box>
+    </Box>
   );
 };
 

@@ -10,7 +10,7 @@ import "./Components/Actions/List/AllPub.css"
 import Login from './Components/Authentication/Login';
 import Register from './Components/Authentication/Register';
 import Update from "./Pages/Update"
-import "./Components/Actions/Update/Update.css"
+
 
 function App() {
   return (

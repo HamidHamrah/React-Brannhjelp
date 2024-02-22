@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { TextField, Button, Box, Container } from '@mui/material';
 
 function UpdatePublication() {
   const { id } = useParams();
@@ -10,10 +11,8 @@ function UpdatePublication() {
   const [article, setArticle] = useState({
     title: '',
     content: '',
-    // Initialize updatedAt here if needed, or handle dynamically on submit
   });
 
-  // Fetch the existing publication data on component mount
   useEffect(() => {
     const fetchUrl = `https://localhost:7207/api/Publications/${id}?UserId=${userId}`;
     fetch(fetchUrl)
@@ -22,7 +21,6 @@ function UpdatePublication() {
         setArticle({
           title: data.title,
           content: data.content,
-          // Assuming 'updatedAt' is part of the response, otherwise handle separately
         });
       })
       .catch(error => console.error('Error fetching article:', error));
@@ -33,17 +31,15 @@ function UpdatePublication() {
     setArticle(prevArticle => ({ ...prevArticle, [name]: value }));
   };
 
-  // Handle the article update submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updateUrl = `https://localhost:7207/api/Publications/${id}`; // Note: UserId is not appended here
+    const updateUrl = `https://localhost:7207/api/Publications/${id}`;
     fetch(updateUrl, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...article,
-        updatedAt: new Date().toISOString(), // Update 'updatedAt' dynamically on submit
-        // Include 'id' and 'UserId' if necessary for your backend logic
+        updatedAt: new Date().toISOString(),
         id: id,
         userId: userId,
       }),
@@ -52,38 +48,51 @@ function UpdatePublication() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      navigate('/All'); // Redirect after successful update
+      navigate('/');
     })
     .catch(error => console.error('Error updating article:', error));
   };
 
   return (
-    <div className="update-container">
-      <form onSubmit={handleSubmit} className="update-form">
-        <div className="input-group">
-          <label htmlFor="title" className="input-label">Title:</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={article.title}
-            onChange={handleChange}
-            className="input-field"
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="content" className="input-label">Content:</label>
-          <textarea
-            id="content"
-            name="content"
-            value={article.content}
-            onChange={handleChange}
-            className="textarea-field"
-          />
-        </div>
-        <button type="submit" className="submit-button">Update Article</button>
-      </form>
-    </div>
+    <Container maxWidth="md" sx={{ mt: 0, mb: 4, boxShadow: 0, borderRadius: 2, p: 3 }}>
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="title"
+          label="Title"
+          name="title"
+          autoComplete="title"
+          autoFocus
+          value={article.title}
+          onChange={handleChange}
+          variant="outlined"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="content"
+          label="Content"
+          type="text"
+          id="content"
+          autoComplete="current-content"
+          multiline
+          rows={20}
+          value={article.content}
+          onChange={handleChange}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Update Article
+        </Button>
+      </Box>
+    </Container>
   );
 }
 

@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
+import { Container, TextField, Button, Box } from '@mui/material';
+
+let lastId = 0; // Initialize with 9 so the first use increments to 10
 
 export default function Create() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   const handlePost = async () => {
+    lastId++; // Increment the ID for each new article
     const article = {
-      title: title, // Fixed typo
+      id: lastId.toString(), // Convert to string to match your JSON structure
+      title: title,
       content: content,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      userId: "Hamid", // Static userId, replace with dynamic value when authentication is implemented
     };
+
     try {
       const response = await fetch('https://localhost:7207/api/publications', {
         method: 'POST',
@@ -33,20 +42,44 @@ export default function Create() {
   };
 
   return (
-    <div className="article-form">
-      <input
-        type="text"
-        placeholder="Title..."
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <textarea
-        placeholder="Write here..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        rows="10"
-      ></textarea>
-      <button onClick={handlePost}>Post</button>
-    </div>
+    <Container maxWidth="md" sx={{ mt: 2, mb: 4, boxShadow: 3, borderRadius: 2, p: 3 }}>
+      <Box component="form" noValidate sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="title"
+          label="Title"
+          name="title"
+          autoComplete="title"
+          autoFocus
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          variant="outlined"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="content"
+          label="Content"
+          type="text"
+          id="content"
+          autoComplete="current-content"
+          multiline
+          rows={20}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <Button
+          onClick={handlePost}
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          Post
+        </Button>
+      </Box>
+    </Container>
   );
 }
