@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import { Container, TextField, Button, Box } from '@mui/material';
+import { Container, TextField, Button, Box, Snackbar, Alert } from '@mui/material';
 
-let lastId = 0; // Initialize with 9 so the first use increments to 10
+let lastId = 10; // Initialize outside the component if it doesn't need to reset between component re-renders
 
 export default function Create() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false); // State to control Snackbar visibility
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // Optional: State to manage Snackbar message dynamically
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // Optional: State to manage Snackbar severity dynamically
 
   const handlePost = async () => {
     lastId++; // Increment the ID for each new article
     const article = {
-      id: lastId.toString(), // Convert to string to match your JSON structure
+      id: lastId.toString(),
       title: title,
       content: content,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      userId: "Hamid", // Static userId, replace with dynamic value when authentication is implemented
+      userId: "Hamid",
     };
 
     try {
@@ -27,18 +30,34 @@ export default function Create() {
         body: JSON.stringify(article),
       });
       if (response.ok) {
-        alert('Article posted successfully!');
+        // Update Snackbar message and severity then show it
+        setSnackbarMessage('Article posted successfully!');
+        setSnackbarSeverity('success');
+        setOpenSnackbar(true);
         setTitle(''); // Reset form fields
         setContent('');
       } else {
-        const errorText = await response.text(); // Or response.json() if the server returns JSON
+        const errorText = await response.text();
         console.error('Failed to post the article:', errorText);
-        alert('Failed to post the article. Please try again later.');
+        // Optionally, show error message in Snackbar
+        setSnackbarMessage('Failed to post the article. Please try again later.');
+        setSnackbarSeverity('error');
+        setOpenSnackbar(true);
       }
     } catch (error) {
       console.error('Error posting the article:', error);
-      alert('Error posting the article. Please try again later.');
+      // Optionally, show error message in Snackbar
+      setSnackbarMessage('Error posting the article. Please try again later.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
   return (
@@ -80,6 +99,11 @@ export default function Create() {
           Post
         </Button>
       </Box>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

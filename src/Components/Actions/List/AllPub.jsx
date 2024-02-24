@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, 
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton 
+import {
+  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton,
+  Snackbar, Alert
 } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -14,8 +15,12 @@ export default function Read() {
   const [open, setOpen] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
-  const UserID = 'Hamid'; // Placeholder for user ID
+  const UserID = 'Hamid';
   const navigate = useNavigate();
+
+  // Snackbar states
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     fetch('https://localhost:7207/api/Publications')
@@ -27,10 +32,11 @@ export default function Read() {
   const toggleSortDirection = () => {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
-
   const sortedData = [...data].sort((a, b) => {
-    return sortDirection === 'asc' ? a.id - b.id : b.id - a.id;
-  });
+    return sortDirection === 'asc' ? parseInt(a.id) - parseInt(b.id) : parseInt(b.id) - parseInt(a.id);
+});
+
+
 
   const handleUpdate = (id) => {
     navigate(`/update/${id}?UserId=${UserID}`);
@@ -51,11 +57,27 @@ export default function Read() {
     fetch(`https://localhost:7207/api/Publications/${selectedPublication.id}?UserId=${UserID}`, {
       method: 'DELETE',
     })
-    .then(() => {
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to delete the publication');
+      }
       setData(data.filter((item) => item.id !== selectedPublication.id));
+      setSnackbarMessage('Publication deleted successfully');
+      setSnackbarOpen(true);
       handleClose();
     })
-    .catch((error) => console.error('Error deleting publication:', error));
+    .catch((error) => {
+      console.error('Error deleting publication:', error);
+      setSnackbarMessage('Error deleting publication');
+      setSnackbarOpen(true);
+    });
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
   };
 
   return (
@@ -72,11 +94,11 @@ export default function Read() {
           <Button onClick={handleDelete} color="error">Delete</Button>
         </DialogActions>
       </Dialog>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ overflowX: "hidden" }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID 
+              <TableCell>ID
                 <IconButton onClick={toggleSortDirection} size="small">
                   {sortDirection === 'asc' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
                 </IconButton>
@@ -103,6 +125,11 @@ export default function Read() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

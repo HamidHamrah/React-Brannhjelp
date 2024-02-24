@@ -48,7 +48,7 @@ function UpdatePublication() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      navigate('/');
+      navigate('/All');
     })
     .catch(error => console.error('Error updating article:', error));
   };
