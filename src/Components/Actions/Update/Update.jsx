@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Container } from '@mui/material';
+import FroalaEditor from 'react-froala-wysiwyg';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/js/plugins.pkgd.min.js';
 
 function UpdatePublication() {
   const { id } = useParams();
@@ -26,9 +30,13 @@ function UpdatePublication() {
       .catch(error => console.error('Error fetching article:', error));
   }, [id, userId]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setArticle(prevArticle => ({ ...prevArticle, [name]: value }));
+  const handleModelChange = (model) => {
+    setArticle(prevArticle => ({ ...prevArticle, content: model }));
+  };
+
+  const handleTitleChange = (event) => {
+    const newTitle = event.target.value;
+    setArticle(prevArticle => ({ ...prevArticle, title: newTitle }));
   };
 
   const handleSubmit = (e) => {
@@ -66,22 +74,13 @@ function UpdatePublication() {
           autoComplete="title"
           autoFocus
           value={article.title}
-          onChange={handleChange}
+          onChange={handleTitleChange}
           variant="outlined"
         />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          name="content"
-          label="Content"
-          type="text"
-          id="content"
-          autoComplete="current-content"
-          multiline
-          rows={20}
-          value={article.content}
-          onChange={handleChange}
+        <FroalaEditor
+          model={article.content}
+          onModelChange={handleModelChange}
+          tag='textarea'
         />
         <Button
           type="submit"

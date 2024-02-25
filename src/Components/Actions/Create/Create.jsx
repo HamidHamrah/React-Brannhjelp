@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Box, Snackbar, Alert } from '@mui/material';
+import FroalaEditor from 'react-froala-wysiwyg';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/js/plugins.pkgd.min.js';
 
-let lastId = 10; // Initialize outside the component if it doesn't need to reset between component re-renders
+let lastId = 10; // Initialize outside the component
 
 export default function Create() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [openSnackbar, setOpenSnackbar] = useState(false); // State to control Snackbar visibility
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // Optional: State to manage Snackbar message dynamically
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // Optional: State to manage Snackbar severity dynamically
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const handlePost = async () => {
     lastId++; // Increment the ID for each new article
@@ -30,23 +34,20 @@ export default function Create() {
         body: JSON.stringify(article),
       });
       if (response.ok) {
-        // Update Snackbar message and severity then show it
         setSnackbarMessage('Article posted successfully!');
         setSnackbarSeverity('success');
         setOpenSnackbar(true);
-        setTitle(''); // Reset form fields
+        setTitle('');
         setContent('');
       } else {
         const errorText = await response.text();
         console.error('Failed to post the article:', errorText);
-        // Optionally, show error message in Snackbar
         setSnackbarMessage('Failed to post the article. Please try again later.');
         setSnackbarSeverity('error');
         setOpenSnackbar(true);
       }
     } catch (error) {
       console.error('Error posting the article:', error);
-      // Optionally, show error message in Snackbar
       setSnackbarMessage('Error posting the article. Please try again later.');
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
@@ -76,19 +77,14 @@ export default function Create() {
           onChange={(e) => setTitle(e.target.value)}
           variant="outlined"
         />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          name="content"
-          label="Content"
-          type="text"
-          id="content"
-          autoComplete="current-content"
-          multiline
-          rows={20}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+        <FroalaEditor
+          tag='textarea'
+          model={content}
+          onModelChange={setContent}
+          config={{
+            placeholderText: 'Edit Your Content Here!',
+            // ... other Froala options as needed
+          }}
         />
         <Button
           onClick={handlePost}
