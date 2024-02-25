@@ -83,9 +83,12 @@ export default function Create() {
           onModelChange={setContent}
           config={{
             placeholderText: 'Edit Your Content Here!',
-            // ... other Froala options as needed
+            pluginsEnabled: ['align', 'charCounter', 'codeView', 'colors', 'draggable', 'emoticons', 'fontFamily', 'fontSize', 'fullscreen', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quote', 'save', 'url', 'wordPaste'],
+            toolbarButtons: ['bold', 'italic', 'underline', '|', 'formatOL', 'formatUL', 'outdent', 'indent', '|', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontFamily', 'fontSize', 'color', '|', 'align', 'paragraphFormat', 'paragraphStyle', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
+            // Include other configuration options as needed
           }}
         />
+
         <Button
           onClick={handlePost}
           fullWidth
