@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Box, Snackbar, Alert } from '@mui/material';
 import FroalaEditor from 'react-froala-wysiwyg';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/js/plugins.pkgd.min.js';
-
-let lastId = 10; // Initialize outside the component
 
 export default function Create() {
   const [title, setTitle] = useState('');
@@ -13,11 +11,29 @@ export default function Create() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [lastId, setLastId] = useState(0); // To store the last used ID
+
+  // Fetch the last used publication ID from the API
+  const fetchLastId = async () => {
+    try {
+      const response = await fetch('https://localhost:7207/api/Publications/last');
+      if (!response.ok) throw new Error('Failed to fetch last ID');
+      const data = await response.text(); // Assuming the endpoint returns just the ID
+      setLastId(parseInt(data, 10));
+    } catch (error) {
+      console.error('Error fetching last ID:', error);
+      // Handle error state appropriately
+    }
+  };
+
+  useEffect(() => {
+    fetchLastId(); // Fetch the last ID when component mounts
+  }, []);
 
   const handlePost = async () => {
-    lastId++; // Increment the ID for each new article
+    const newId = lastId + 1; // Prepare the new ID based on the last fetched ID
     const article = {
-      id: lastId.toString(),
+      id: newId.toString(),
       title: title,
       content: content,
       createdAt: new Date().toISOString(),
@@ -26,7 +42,7 @@ export default function Create() {
     };
 
     try {
-      const response = await fetch('https://localhost:7207/api/publications', {
+      const response = await fetch('https://localhost:7207/api/Publications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,6 +55,7 @@ export default function Create() {
         setOpenSnackbar(true);
         setTitle('');
         setContent('');
+        fetchLastId(); // Re-fetch the last ID to ensure it's up-to-date
       } else {
         const errorText = await response.text();
         console.error('Failed to post the article:', errorText);
@@ -82,25 +99,11 @@ export default function Create() {
           model={content}
           onModelChange={setContent}
           config={{
-            placeholderText: 'ENTERN YOUR CONTENT HERE!',
-            pluginsEnabled: [
-              'align', 'charCounter', 'codeView', 'colors', 'draggable',
-              'emoticons', 'entities', 'fontFamily', 'fontSize', 'fullscreen',
-              'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat',
-              'paragraphStyle', 'quote', 'save', 'table', 'url', 'wordPaste', 'print'
-            ],
-            toolbarButtons: [
-              'bold', 'italic', 'underline', '|',
-              'formatOL', 'formatUL', 'outdent', 'indent', '|',
-              'insertLink', 'insertImage', 'insertTable', '|',
-              'emoticons', 'specialCharacters', 'fontFamily', 'fontSize', 'color', '|',
-              'align', 'paragraphFormat', 'paragraphStyle', '|',
-              'fullscreen', 'print', '|', 
-              'undo', 'redo', 'clearFormatting', 'selectAll', 'html'
-            ],
+            placeholderText: 'Edit Your Content Here!',
+            pluginsEnabled: ['align', 'charCounter', 'codeView', 'colors', 'draggable', 'emoticons', 'fontFamily', 'fontSize', 'fullscreen', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quote', 'save', 'url', 'wordPaste', 'table', 'specialCharacters', 'print'],
+            toolbarButtons: ['bold', 'italic', 'underline', '|', 'formatOL', 'formatUL', 'outdent', 'indent', '|', 'insertLink', 'insertImage', 'insertTable', 'specialCharacters', '|', 'emoticons', 'fontFamily', 'fontSize', 'color', '|', 'align', 'paragraphFormat', 'paragraphStyle', '|', 'fullscreen', 'print', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
           }}
         />
-
         <Button
           onClick={handlePost}
           fullWidth

@@ -16,6 +16,7 @@ function UpdatePublication() {
     title: '',
     content: '',
   });
+  
 
   useEffect(() => {
     const fetchUrl = `https://localhost:7207/api/Publications/${id}?UserId=${userId}`;
@@ -63,35 +64,41 @@ function UpdatePublication() {
 
   return (
     <Container maxWidth="md" sx={{ mt: 0, mb: 4, boxShadow: 0, borderRadius: 2, p: 3 }}>
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="title"
-          label="Title"
-          name="title"
-          autoComplete="title"
-          autoFocus
-          value={article.title}
-          onChange={handleTitleChange}
-          variant="outlined"
-        />
-        <FroalaEditor
-          model={article.content}
-          onModelChange={handleModelChange}
-          tag='textarea'
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Update Article
-        </Button>
-      </Box>
-    </Container>
+    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="title"
+        label="Title"
+        name="title"
+        autoComplete="title"
+        autoFocus
+        value={article.title}
+        onChange={handleTitleChange}
+        variant="outlined"
+      />
+      <FroalaEditor
+        tag='textarea'
+        model={article.content}
+        onModelChange={handleModelChange}
+        config={{
+          placeholderText: 'Edit Your Content Here!',
+          pluginsEnabled: ['align', 'charCounter', 'codeView', 'colors', 'draggable', 'emoticons', 'fontFamily', 'fontSize', 'fullscreen', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quote', 'save', 'url', 'wordPaste', 'table', 'specialCharacters', 'print'],
+          toolbarButtons: ['bold', 'italic', 'underline', '|', 'formatOL', 'formatUL', 'outdent', 'indent', '|', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontFamily', 'fontSize', 'color', '|', 'align', 'paragraphFormat', 'paragraphStyle', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'insertSpecialCharacters', 'fullscreen', 'print'],
+          // Additional configuration for custom buttons or PDF export if needed
+        }}
+      />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+      >
+        Update Article
+      </Button>
+    </Box>
+  </Container>
   );
 }
 
