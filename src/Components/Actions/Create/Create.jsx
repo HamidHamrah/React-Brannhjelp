@@ -82,10 +82,22 @@ export default function Create() {
           model={content}
           onModelChange={setContent}
           config={{
-            placeholderText: 'Edit Your Content Here!',
-            pluginsEnabled: ['align', 'charCounter', 'codeView', 'colors', 'draggable', 'emoticons', 'fontFamily', 'fontSize', 'fullscreen', 'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quote', 'save', 'url', 'wordPaste'],
-            toolbarButtons: ['bold', 'italic', 'underline', '|', 'formatOL', 'formatUL', 'outdent', 'indent', '|', 'insertLink', 'insertImage', 'insertTable', '|', 'emoticons', 'fontFamily', 'fontSize', 'color', '|', 'align', 'paragraphFormat', 'paragraphStyle', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html'],
-            // Include other configuration options as needed
+            placeholderText: 'ENTERN YOUR CONTENT HERE!',
+            pluginsEnabled: [
+              'align', 'charCounter', 'codeView', 'colors', 'draggable',
+              'emoticons', 'entities', 'fontFamily', 'fontSize', 'fullscreen',
+              'inlineStyle', 'lineBreaker', 'link', 'lists', 'paragraphFormat',
+              'paragraphStyle', 'quote', 'save', 'table', 'url', 'wordPaste', 'print'
+            ],
+            toolbarButtons: [
+              'bold', 'italic', 'underline', '|',
+              'formatOL', 'formatUL', 'outdent', 'indent', '|',
+              'insertLink', 'insertImage', 'insertTable', '|',
+              'emoticons', 'specialCharacters', 'fontFamily', 'fontSize', 'color', '|',
+              'align', 'paragraphFormat', 'paragraphStyle', '|',
+              'fullscreen', 'print', '|', 
+              'undo', 'redo', 'clearFormatting', 'selectAll', 'html'
+            ],
           }}
         />
 
