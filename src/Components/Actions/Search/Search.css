@@ -66,13 +66,32 @@
     margin: 10px;
     padding: 10px;
   }
+  .article-body table {
+    width: 100%; /* Adjust as needed */
+    max-width: 100%; /* Ensures the table does not exceed the container's width */
+    table-layout: fixed; /* This helps in making the table layout more predictable */
+    overflow-x: auto; /* Enables horizontal scrolling on smaller screens */
+  }
   
+  
+  .article-body th, .article-body td {
+    border: 1px solid rgb(187, 107, 107); /* Make lines visible */
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .article-body th {
+    background-color: #f2f2f2;
+  }
+  
+  
+
   @media (min-width: 768px) {
   
     .sidebar,
     .articles-list {
-      /* You can set a specific max-height here if needed for larger screens */
       max-height: 600px;
+      max-width: 20%;
       /* Adjust based on the expected screen size and layout */
       overflow-y: auto;
       /* Maintain scrollbar functionality */
@@ -101,5 +120,12 @@
       flex-grow: 1;
       padding-left: 20px;
       /* Or appropriate spacing */
+    }
+    .article-body table {
+      width: 100%;
+      table-layout: auto;
+    }
+    .article-body th, .article-body td {
+      padding: 10px; /* Adjust padding to save space */
     }
   }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Box, TextField, List, ListItem, ListItemText, Typography } from '@mui/material';
+import DOMPurify from 'dompurify';
+
 
 const Sidebar = () => {
   const [articles, setArticles] = useState([]);
@@ -47,8 +49,7 @@ const Sidebar = () => {
         {selectedArticle && (
           <>
             <Typography variant="h5" component="h2" className="article-title">{selectedArticle.title}</Typography>
-            {/* Here we render the HTML content safely */}
-            <Typography variant="body1" className="article-body" dangerouslySetInnerHTML={{ __html: selectedArticle.content }}></Typography>
+            <Typography variant="body1" className="article-body" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedArticle.content) }}></Typography>
           </>
         )}
       </Box>
