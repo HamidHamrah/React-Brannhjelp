@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton } from '@mui/material';
-import { ExpandMore, ExpandLess } from '@mui/icons-material';
+import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton, ListItemIcon } from '@mui/material';
+import { ExpandMore, ExpandLess, Article as ArticleIcon } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 
 const Sidebar = () => {
   const [articles, setArticles] = useState([]);
-  const [articleMap, setArticleMap] = useState({}); // New state to keep a flat structure of articles
+  const [articleMap, setArticleMap] = useState({});
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [expandedArticleIds, setExpandedArticleIds] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,14 +49,27 @@ const Sidebar = () => {
     return articles.map((article) => {
       const isExpanded = !!expandedArticleIds[article.id];
       const hasChildren = article.childPublications && article.childPublications.length > 0;
+      const isSelected = article.id === selectedArticleId;
 
       return (
         <React.Fragment key={article.id}>
           <ListItem 
             button 
             onClick={() => handleArticleSelect(article.id)} 
-            sx={{ pl: depth * 2, mb: 1, bgcolor: 'background.paper' }}
+            sx={{ 
+              pl: depth * 2, 
+              mb: 1, 
+              bgcolor: isSelected ? 'primary.light' : 'background.paper', // Highlight selected item
+              '&:hover': {
+                bgcolor: 'primary.main', // Hover effect
+                color: 'primary.contrastText',
+              },
+              color: isSelected ? 'primary.contrastText' : 'text.primary', // Text color for selected item
+            }}
           >
+            <ListItemIcon>
+              <ArticleIcon color={isSelected ? "inherit" : "action"} /> {/* Conditional icon color */}
+            </ListItemIcon>
             <ListItemText primary={article.title} />
             {hasChildren && (
               <IconButton
@@ -66,7 +79,7 @@ const Sidebar = () => {
                 }}
                 size="small"
               >
-                {isExpanded ? <ExpandLess /> : <ExpandMore />}
+                {isExpanded ? <ExpandLess color="inherit" /> : <ExpandMore color="inherit" />}
               </IconButton>
             )}
           </ListItem>
@@ -82,7 +95,6 @@ const Sidebar = () => {
     });
   };
 
-  // Use articleMap to find the selected article instead of searching through the nested structure
   const selectedArticle = articleMap[selectedArticleId];
 
   return (
