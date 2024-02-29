@@ -6,6 +6,7 @@ import DOMPurify from 'dompurify';
 
 const Sidebar = () => {
   const [articles, setArticles] = useState([]);
+  const [articleMap, setArticleMap] = useState({}); // New state to keep a flat structure of articles
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [expandedArticleIds, setExpandedArticleIds] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,16 +16,23 @@ const Sidebar = () => {
       try {
         const response = await axios.get('https://localhost:7207/api/publications');
         setArticles(response.data);
+        const flatMap = {};
+        const flattenArticles = (articles) => {
+          articles.forEach(article => {
+            flatMap[article.id] = article;
+            if (article.childPublications) {
+              flattenArticles(article.childPublications);
+            }
+          });
+        };
+        flattenArticles(response.data);
+        setArticleMap(flatMap);
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
     };
     fetchArticles();
   }, []);
-
-  const filteredArticles = articles.filter(article =>
-    article.content.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleArticleSelect = (articleId) => {
     setSelectedArticleId(articleId);
@@ -74,7 +82,8 @@ const Sidebar = () => {
     });
   };
 
-  const selectedArticle = articles.find(article => article.id === selectedArticleId);
+  // Use articleMap to find the selected article instead of searching through the nested structure
+  const selectedArticle = articleMap[selectedArticleId];
 
   return (
     <Box className="layout-container" sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, height: '100vh', overflow: 'hidden' }}>
@@ -88,7 +97,9 @@ const Sidebar = () => {
           sx={{ mb: 2 }}
         />
         <List>
-          {renderArticles(filteredArticles)}
+          {renderArticles(articles.filter(article =>
+            article.content.toLowerCase().includes(searchTerm.toLowerCase())))
+          }
         </List>
       </Box>
       <Box className="article-content" sx={{ flexGrow: 1, minWidth: { md: '500px' }, maxWidth: { md: '70%' }, overflowY: 'auto', p: 3 }}>
