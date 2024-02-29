@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, TextField, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton } from '@mui/material';
+import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
-
 
 const Sidebar = () => {
   const [articles, setArticles] = useState([]);
   const [selectedArticleId, setSelectedArticleId] = useState(null);
+  const [expandedArticleIds, setExpandedArticleIds] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -24,6 +25,55 @@ const Sidebar = () => {
   const filteredArticles = articles.filter(article =>
     article.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleArticleSelect = (articleId) => {
+    setSelectedArticleId(articleId);
+  };
+
+  const toggleArticleExpansion = (articleId) => {
+    setExpandedArticleIds(prevState => ({
+      ...prevState,
+      [articleId]: !prevState[articleId]
+    }));
+  };
+
+  const renderArticles = (articles, depth = 0) => {
+    return articles.map((article) => {
+      const isExpanded = !!expandedArticleIds[article.id];
+      const hasChildren = article.childPublications && article.childPublications.length > 0;
+
+      return (
+        <React.Fragment key={article.id}>
+          <ListItem 
+            button 
+            onClick={() => handleArticleSelect(article.id)} 
+            sx={{ pl: depth * 2, mb: 1, bgcolor: 'background.paper' }}
+          >
+            <ListItemText primary={article.title} />
+            {hasChildren && (
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent ListItem click event from firing
+                  toggleArticleExpansion(article.id);
+                }}
+                size="small"
+              >
+                {isExpanded ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            )}
+          </ListItem>
+          {hasChildren && (
+            <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {renderArticles(article.childPublications, depth + 1)}
+              </List>
+            </Collapse>
+          )}
+        </React.Fragment>
+      );
+    });
+  };
+
   const selectedArticle = articles.find(article => article.id === selectedArticleId);
 
   return (
@@ -38,11 +88,7 @@ const Sidebar = () => {
           sx={{ mb: 2 }}
         />
         <List>
-          {filteredArticles.map((article) => (
-            <ListItem button key={article.id} onClick={() => setSelectedArticleId(article.id)} sx={{ mb: 1, bgcolor: 'background.paper' }}>
-              <ListItemText primary={article.title} />
-            </ListItem>
-          ))}
+          {renderArticles(filteredArticles)}
         </List>
       </Box>
       <Box className="article-content" sx={{ flexGrow: 1, minWidth: { md: '500px' }, maxWidth: { md: '70%' }, overflowY: 'auto', p: 3 }}>
