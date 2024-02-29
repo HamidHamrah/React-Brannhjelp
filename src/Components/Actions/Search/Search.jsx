@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton, ListItemIcon } from '@mui/material';
-import { ExpandMore, ExpandLess, Article as ArticleIcon } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material'; // Import AddIcon
 import DOMPurify from 'dompurify';
 
 const Sidebar = () => {
@@ -50,7 +50,7 @@ const Sidebar = () => {
       const isExpanded = !!expandedArticleIds[article.id];
       const hasChildren = article.childPublications && article.childPublications.length > 0;
       const isSelected = article.id === selectedArticleId;
-
+  
       return (
         <React.Fragment key={article.id}>
           <ListItem 
@@ -71,6 +71,15 @@ const Sidebar = () => {
               <ArticleIcon color={isSelected ? "inherit" : "action"} /> {/* Conditional icon color */}
             </ListItemIcon>
             <ListItemText primary={article.title} />
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent ListItem click event from firing
+                // Handle adding child article logic here
+              }}
+              size="small"
+            >
+              <AddIcon color="inherit" /> {/* You need to import AddIcon from Mui */}
+            </IconButton>
             {hasChildren && (
               <IconButton
                 onClick={(e) => {
@@ -94,6 +103,7 @@ const Sidebar = () => {
       );
     });
   };
+  
 
   const selectedArticle = articleMap[selectedArticleId];
 
