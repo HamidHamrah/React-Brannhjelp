@@ -79,7 +79,7 @@ export default function Create() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 2, mb: 4, boxShadow: 3, borderRadius: 2, p: 3 }}>
+    <Container maxWidth="md" sx={{ mt: 2, mb: 4, boxShadow: 0, borderRadius: 2, p: 3 }}>
       <Box component="form" noValidate sx={{ mt: 1 }}>
         <TextField
           margin="normal"
