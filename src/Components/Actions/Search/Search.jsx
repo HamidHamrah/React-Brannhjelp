@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton, ListItemIcon } from '@mui/material';
-import { ExpandMore, ExpandLess, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material'; // Import AddIcon
+import { ExpandMore, ExpandLess, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 
 const Sidebar = () => {
@@ -10,6 +10,9 @@ const Sidebar = () => {
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [expandedArticleIds, setExpandedArticleIds] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Simulated user role variable, change this to "admin" to see the add buttons
+  const userRole = "normal"; // Change to "admin" to see the add parent article button
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -45,6 +48,12 @@ const Sidebar = () => {
     }));
   };
 
+  const handleAddParentArticle = (e) => {
+    e.stopPropagation();
+    // Placeholder for logic to add a new parent article
+    console.log("Add new parent article logic goes here.");
+  };
+
   const renderArticles = (articles, depth = 0) => {
     return articles.map((article) => {
       const isExpanded = !!expandedArticleIds[article.id];
@@ -59,31 +68,33 @@ const Sidebar = () => {
             sx={{ 
               pl: depth * 2, 
               mb: 1, 
-              bgcolor: isSelected ? 'primary.light' : 'background.paper', // Highlight selected item
+              bgcolor: isSelected ? 'primary.light' : 'background.paper',
               '&:hover': {
-                bgcolor: 'primary.main', // Hover effect
+                bgcolor: 'primary.main',
                 color: 'primary.contrastText',
               },
-              color: isSelected ? 'primary.contrastText' : 'text.primary', // Text color for selected item
+              color: isSelected ? 'primary.contrastText' : 'text.primary',
             }}
           >
             <ListItemIcon>
-              <ArticleIcon color={isSelected ? "inherit" : "action"} /> {/* Conditional icon color */}
+              <ArticleIcon color={isSelected ? "inherit" : "action"} />
             </ListItemIcon>
             <ListItemText primary={article.title} />
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation(); // Prevent ListItem click event from firing
-                // Handle adding child article logic here
-              }}
-              size="small"
-            >
-              <AddIcon color="inherit" /> {/* You need to import AddIcon from Mui */}
-            </IconButton>
-            {hasChildren && (
+            {userRole === "admin" && (
               <IconButton
                 onClick={(e) => {
                   e.stopPropagation(); // Prevent ListItem click event from firing
+                  // Placeholder for adding child article logic here
+                }}
+                size="small"
+              >
+                <AddIcon color="inherit" />
+              </IconButton>
+            )}
+            {hasChildren && (
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
                   toggleArticleExpansion(article.id);
                 }}
                 size="small"
@@ -104,20 +115,29 @@ const Sidebar = () => {
     });
   };
   
-
   const selectedArticle = articleMap[selectedArticleId];
 
   return (
     <Box className="layout-container" sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, height: '100vh', overflow: 'hidden' }}>
       <Box className="search-and-list" sx={{ width: { xs: '100%', md: '25%' }, flexShrink: 0, maxHeight: '100vh', overflowY: 'auto' }}>
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ mb: 2 }}
-        />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {userRole === "admin" && (
+            <IconButton
+              onClick={handleAddParentArticle}
+              color="primary"
+              aria-label="add parent article"
+            >
+              <AddIcon />
+            </IconButton>
+          )}
+        </Box>
         <List>
           {renderArticles(articles.filter(article =>
             article.content.toLowerCase().includes(searchTerm.toLowerCase())))
