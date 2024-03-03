@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton, ListItemIcon } from '@mui/material';
 import { ExpandMore, ExpandLess, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Sidebar = () => {
   const [articles, setArticles] = useState([]);
@@ -10,9 +11,8 @@ const Sidebar = () => {
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [expandedArticleIds, setExpandedArticleIds] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Simulated user role variable, change this to "admin" to see the add buttons
-  const userRole = "normal"; // Change to "admin" to see the add parent article button
+  const userRole = "admin"; // Assume "admin" role for demonstration
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -50,8 +50,12 @@ const Sidebar = () => {
 
   const handleAddParentArticle = (e) => {
     e.stopPropagation();
-    // Placeholder for logic to add a new parent article
-    console.log("Add new parent article logic goes here.");
+    navigate('/create', { state: { parentId: null } });
+  };
+
+  const handleAddChildArticle = (articleId, e) => {
+    e.stopPropagation();
+    navigate('/create', { state: { parentId: articleId } });
   };
 
   const renderArticles = (articles, depth = 0) => {
@@ -82,10 +86,7 @@ const Sidebar = () => {
             <ListItemText primary={article.title} />
             {userRole === "admin" && (
               <IconButton
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent ListItem click event from firing
-                  // Placeholder for adding child article logic here
-                }}
+                onClick={(e) => handleAddChildArticle(article.id, e)}
                 size="small"
               >
                 <AddIcon color="inherit" />
@@ -140,7 +141,7 @@ const Sidebar = () => {
         </Box>
         <List>
           {renderArticles(articles.filter(article =>
-            article.content.toLowerCase().includes(searchTerm.toLowerCase())))
+            article.title.toLowerCase().includes(searchTerm.toLowerCase())))
           }
         </List>
       </Box>

@@ -4,8 +4,9 @@ import FroalaEditor from 'react-froala-wysiwyg';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/js/plugins.pkgd.min.js';
+// Assuming you might pass parentId some other way or determine it within this component
 
-export default function Create() {
+export default function Create({ parentId = null }) { // Example prop for parentId, defaulting to null
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -22,24 +23,30 @@ export default function Create() {
       setLastId(parseInt(data, 10));
     } catch (error) {
       console.error('Error fetching last ID:', error);
-      // Handle error state appropriately
     }
   };
 
   useEffect(() => {
     fetchLastId(); // Fetch the last ID when component mounts
   }, []);
-
   const handlePost = async () => {
-    const newId = lastId + 1; // Prepare the new ID based on the last fetched ID
+    // Hardcoded values for demonstration
+    const newId = 2; // Hardcoded new ID
+    const parentId =""; // Hardcoded parentId for a child article scenario
+  
     const article = {
-      id: newId.toString(),
+      id: newId.toString(), // Convert ID to string
       title: title,
       content: content,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      userId: "Hamid",
+      userId: "Hamid", // Static userId for demonstration
+      parentId: parentId.toString(), // Ensure parentId is a string
+      childPublications: [], // Assuming this is correct as an empty array
     };
+  
+    console.log("Posting article:", article); // Debug log to verify the article object
+  
 
     try {
       const response = await fetch('https://localhost:7207/api/Publications', {
