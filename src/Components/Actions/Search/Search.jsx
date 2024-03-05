@@ -50,7 +50,7 @@ const Sidebar = () => {
 
   const handleAddParentArticle = (e) => {
     e.stopPropagation();
-    navigate('/create', { state: { parentId: null } });
+    navigate('/create', { state: { parentId: 0 } });
   };
 
   const handleAddChildArticle = (articleId, e) => {

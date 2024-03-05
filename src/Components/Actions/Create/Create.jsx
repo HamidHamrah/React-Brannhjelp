@@ -4,48 +4,36 @@ import FroalaEditor from 'react-froala-wysiwyg';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/js/plugins.pkgd.min.js';
+import { useLocation } from 'react-router-dom'; // Import useLocation
+
 // Assuming you might pass parentId some other way or determine it within this component
 
-export default function Create({ parentId = null }) { // Example prop for parentId, defaulting to null
+export default function Create() {
+  const location = useLocation(); // Use useLocation to access the navigation state
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const [lastId, setLastId] = useState(0); // To store the last used ID
-
-  // Fetch the last used publication ID from the API
-  const fetchLastId = async () => {
-    try {
-      const response = await fetch('https://localhost:7207/api/Publications/last');
-      if (!response.ok) throw new Error('Failed to fetch last ID');
-      const data = await response.text(); // Assuming the endpoint returns just the ID
-      setLastId(parseInt(data, 10));
-    } catch (error) {
-      console.error('Error fetching last ID:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchLastId(); // Fetch the last ID when component mounts
-  }, []);
-  const handlePost = async () => {
-    // Hardcoded values for demonstration
-    const newId = 2; // Hardcoded new ID
-    const parentId =""; // Hardcoded parentId for a child article scenario
+  const parentId = location.state?.parentId; // Retrieve parentId from the navigation state
   
+
+  const handlePost = async () => {
+    const newId = Math.floor(Math.random() * 10000); // Generate a random new ID
+
     const article = {
-      id: newId.toString(), // Convert ID to string
+      id: newId.toString(),
       title: title,
       content: content,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      userId: "Hamid", // Static userId for demonstration
-      parentId: parentId.toString(), // Ensure parentId is a string
-      childPublications: [], // Assuming this is correct as an empty array
+      userId: "Hamid", // Adjust as needed to match your user identification logic
+      parentId: parentId || "" , // Use the parentId directly from the state
+      childPublications: [],
     };
+
   
-    console.log("Posting article:", article); // Debug log to verify the article object
+    console.log(parentId); // Debug log to verify the article object
   
 
     try {
@@ -62,7 +50,6 @@ export default function Create({ parentId = null }) { // Example prop for parent
         setOpenSnackbar(true);
         setTitle('');
         setContent('');
-        fetchLastId(); // Re-fetch the last ID to ensure it's up-to-date
       } else {
         const errorText = await response.text();
         console.error('Failed to post the article:', errorText);
