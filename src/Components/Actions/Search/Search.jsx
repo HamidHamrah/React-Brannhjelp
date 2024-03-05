@@ -13,6 +13,7 @@ const Sidebar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const userRole = "admin"; // Assume "admin" role for demonstration
   const navigate = useNavigate(); // Initialize useNavigate
+  
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -50,7 +51,7 @@ const Sidebar = () => {
 
   const handleAddParentArticle = (e) => {
     e.stopPropagation();
-    navigate('/create', { state: { parentId: 0 } });
+    navigate('/create', { state: { parentId: null } });
   };
 
   const handleAddChildArticle = (articleId, e) => {
