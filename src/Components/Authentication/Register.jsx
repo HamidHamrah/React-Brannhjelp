@@ -17,7 +17,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="https://www.ignist.no/">
         Ignist
       </Link>{' '}
       {new Date().getFullYear()}
@@ -31,59 +31,55 @@ const defaultTheme = createTheme();
 export default function SignUp() {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
-    Username: '',
+    firstName: '',
     lastName: '',
     email: '',
     password: '',
   });
   const [formErrors, setFormErrors] = useState({});
 
-  const validate = (values) => {
-    const errors = {};
-    const regex = /^[A-Za-z]+$/; // Regex for name validation (only characters)
-    const emailRegex = /\S+@\S+\.\S+/; // Regex for email validation
-
-    if (!values.firstName || !regex.test(values.firstName)) {
-      errors.firstName = "First Name must contain only characters";
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'firstName':
+      case 'lastName':
+        return /^[A-Za-z]+$/.test(value) ? '' : 'Only characters are allowed';
+      case 'email':
+        return /\S+@\S+\.\S+/.test(value) ? '' : 'Email address is invalid';
+      case 'password':
+        return value.length >= 8 ? '' : 'Password must be 8 characters or more';
+      default:
+        return '';
     }
-    if (!values.lastName || !regex.test(values.lastName)) {
-      errors.lastName = "Last Name must contain only characters";
-    }
-    if (!values.email) {
-      errors.email = "Email is required";
-    } else if (!emailRegex.test(values.email)) {
-      errors.email = "Email address is invalid";
-    }
-    if (!values.password) {
-      errors.password = "Password is required";
-    } else if (values.password.length < 8) {
-      errors.password = "Password must be 8 characters or more";
-    }
-    return errors;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    // Validate each field when it changes
-    setFormErrors(validate({ ...formValues, [name]: value }));
+    setFormErrors({ ...formErrors, [name]: validateField(name, value) });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const errors = validate(formValues);
-    if (Object.keys(errors).length === 0) {
+    const errors = Object.keys(formValues).reduce((acc, key) => {
+      acc[key] = validateField(key, formValues[key]);
+      return acc;
+    }, {});
+    setFormErrors(errors);
+    if (!Object.values(errors).some((error) => error)) {
       try {
-        const response = await axios.post('https://localhost:7207/Auth/register', formValues);
+        const response = await axios.post('https://localhost:7207/Auth/register', {
+          userName: formValues.firstName,
+          lastName: formValues.lastName,
+          email: formValues.email,
+          password: formValues.password,
+        });
         if (response.status === 200) {
-          navigate('/home');
+          navigate('/login');
         }
       } catch (error) {
         console.error('Registration failed:', error);
         // Handle specific error based on response if needed
       }
-    } else {
-      setFormErrors(errors);
     }
   };
 

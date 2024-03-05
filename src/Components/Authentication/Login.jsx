@@ -5,8 +5,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,15 +12,15 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Alert from '@mui/material/Alert'; // Import Alert for displaying messages
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState({});
+  const [apiMessage, setApiMessage] = useState({ type: '', text: '' }); // New state for API messages
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
   });
@@ -30,7 +28,6 @@ export default function SignUp() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    // Optionally, clear errors for this field as the user types
     setFormErrors({ ...formErrors, [name]: '' });
   };
 
@@ -46,7 +43,6 @@ export default function SignUp() {
     } else if (values.password.length < 8) {
       errors.password = "Password must be at least 8 characters long";
     }
-    // Add validation for other fields as needed
     return errors;
   };
 
@@ -57,10 +53,11 @@ export default function SignUp() {
       try {
         const response = await axios.post('https://localhost:7207/Auth/login', formData);
         if (response.status === 200) {
-          navigate('/home');
+          setApiMessage({ type: 'success', text: 'Login successful! Redirecting...' });
+          setTimeout(() => navigate('/home'),); // Redirect after a delay to show the message
         }
       } catch (error) {
-        console.error('Registration failed:', error);
+        setApiMessage({ type: 'error', text: error.response?.data?.message || 'Login failed. Please try again.' });
       }
     } else {
       setFormErrors(errors);
@@ -83,11 +80,17 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Login
           </Typography>
+          {/* Display API response message */}
+          {apiMessage.text && (
+            <Alert severity={apiMessage.type} sx={{ width: '100%', mt: 2 }}>
+              {apiMessage.text}
+            </Alert>
+          )}
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              {/* Iterate over each TextField, adding validation feedback as needed */}
+              {/* Email Field */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -103,6 +106,7 @@ export default function SignUp() {
                   helperText={formErrors.email}
                 />
               </Grid>
+              {/* Password Field */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -119,7 +123,6 @@ export default function SignUp() {
                   helperText={formErrors.password}
                 />
               </Grid>
-              {/* Include other fields with similar validation setup */}
             </Grid>
             <Button
               type="submit"
@@ -127,12 +130,17 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Login
             </Button>
             <Grid container justifyContent="flex-end">
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
               <Grid item>
                 <Link href="/Register" variant="body2">
-                  Already have an account? Sign in
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
