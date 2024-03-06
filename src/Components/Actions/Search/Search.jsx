@@ -11,7 +11,7 @@ const Sidebar = () => {
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [expandedArticleIds, setExpandedArticleIds] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const userRole = "admin"; // Assume "admin" role for demonstration
+  const userRole = "Normal"; // Assume "admin" role for demonstration
   const navigate = useNavigate(); // Initialize useNavigate
   
 
