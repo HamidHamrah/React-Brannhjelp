@@ -18,7 +18,6 @@ export default function Read() {
   const UserID = 'Hamid';
   const navigate = useNavigate();
 
-  // Snackbar states
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
@@ -32,15 +31,36 @@ export default function Read() {
   const toggleSortDirection = () => {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
-  const sortedData = [...data].sort((a, b) => {
-    return sortDirection === 'asc' ? parseInt(a.id) - parseInt(b.id) : parseInt(b.id) - parseInt(a.id);
-});
 
-
-
-  const handleUpdate = (id) => {
-    navigate(`/update/${id}?UserId=${UserID}`);
+  const renderRows = (items, level = 0) => {
+    return items.map((item) => (
+      <React.Fragment key={item.id}>
+        <TableRow>
+          <TableCell>{item.id}</TableCell>
+          <TableCell style={{ paddingLeft: `${level * 20}px` }}>{item.title}</TableCell>
+          <TableCell>
+            <IconButton onClick={() => handleUpdate(item)} color="primary">
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => handleClickOpen(item)} color="error">
+              <DeleteIcon />
+            </IconButton>
+          </TableCell>
+        </TableRow>
+        {item.childPublications && renderRows(item.childPublications, level + 1)}
+      </React.Fragment>
+    ));
   };
+
+  const handleUpdate = (publication) => {
+    const queryParams = new URLSearchParams({
+      UserId: UserID,
+      parentId: publication.parentId || ''
+    }).toString();
+
+    navigate(`/update/${publication.id}?${queryParams}`);
+  };
+
 
   const handleClickOpen = (item) => {
     setSelectedPublication(item);
@@ -57,20 +77,20 @@ export default function Read() {
     fetch(`https://localhost:7207/api/Publications/${selectedPublication.id}?UserId=${UserID}`, {
       method: 'DELETE',
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to delete the publication');
-      }
-      setData(data.filter((item) => item.id !== selectedPublication.id));
-      setSnackbarMessage('Publication deleted successfully');
-      setSnackbarOpen(true);
-      handleClose();
-    })
-    .catch((error) => {
-      console.error('Error deleting publication:', error);
-      setSnackbarMessage('Error deleting publication');
-      setSnackbarOpen(true);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to delete the publication');
+        }
+        setData(data.filter((pub) => pub.id !== selectedPublication.id));
+        setSnackbarMessage('Publication deleted successfully');
+        setSnackbarOpen(true);
+        handleClose();
+      })
+      .catch((error) => {
+        console.error('Error deleting publication:', error);
+        setSnackbarMessage('Error deleting publication');
+        setSnackbarOpen(true);
+      });
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -108,20 +128,7 @@ export default function Read() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedData.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.id}</TableCell>
-                <TableCell>{item.title}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleUpdate(item.id)} color="primary">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleClickOpen(item)} color="error">
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {renderRows(data)}
           </TableBody>
         </Table>
       </TableContainer>
