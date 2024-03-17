@@ -1,4 +1,4 @@
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from "./Pages/Home"
 import Create from './Pages/Create';
 import AllPub from "./Pages/ListAllpublications"
@@ -10,11 +10,14 @@ import "./Components/Actions/List/AllPub.css"
 import Login from './Components/Authentication/Login';
 import Register from './Components/Authentication/Register';
 import Update from "./Pages/Update"
+import React from 'react';
+import { AuthProvider } from './AuthContext';
 
 
 function App() {
   return (
     <div>
+      <AuthProvider>
         <BrowserRouter>
           <Routes>
             <Route index element={<Home />} />
@@ -26,6 +29,7 @@ function App() {
             <Route path="/update/:id" element={<Update />} />
           </Routes>
         </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }
