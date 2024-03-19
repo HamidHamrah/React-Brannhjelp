@@ -17,15 +17,31 @@ export default function Read() {
   const [sortDirection, setSortDirection] = useState('asc');
   const UserID = 'Hamid';
   const navigate = useNavigate();
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
+  const getCookieValue = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
+
   useEffect(() => {
-    fetch('https://localhost:7207/api/Publications')
-      .then((response) => response.json())
-      .then(setData)
-      .catch((error) => console.error('Error fetching data:', error));
+    const token = getCookieValue('jwtToken'); // Retrieve the JWT token from cookies
+  
+    fetch('https://localhost:7207/api/Publications', {
+      headers: {
+        Authorization: `bearer ${token}`, // Include the JWT token in the Authorization header
+      },
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(setData)
+    .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
   const toggleSortDirection = () => {
@@ -73,25 +89,31 @@ export default function Read() {
 
   const handleDelete = () => {
     if (!selectedPublication) return;
-
+  
+    const token = getCookieValue('jwtToken'); // Retrieve the JWT token from cookies
+  
     fetch(`https://localhost:7207/api/Publications/${selectedPublication.id}?UserId=${UserID}`, {
       method: 'DELETE',
+      headers: {
+        Authorization: `bearer ${token}`, // Include the JWT token in the Authorization header
+      },
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to delete the publication');
-        }
-        setData(data.filter((pub) => pub.id !== selectedPublication.id));
-        setSnackbarMessage('Publication deleted successfully');
-        setSnackbarOpen(true);
-        handleClose();
-      })
-      .catch((error) => {
-        console.error('Error deleting publication:', error);
-        setSnackbarMessage('Error deleting publication');
-        setSnackbarOpen(true);
-      });
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to delete the publication');
+      }
+      setData(data.filter((pub) => pub.id !== selectedPublication.id));
+      setSnackbarMessage('Publication deleted successfully');
+      setSnackbarOpen(true);
+      handleClose();
+    })
+    .catch((error) => {
+      console.error('Error deleting publication:', error);
+      setSnackbarMessage('Error deleting publication');
+      setSnackbarOpen(true);
+    });
   };
+  
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {

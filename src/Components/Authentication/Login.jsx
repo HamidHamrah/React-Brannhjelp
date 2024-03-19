@@ -50,30 +50,28 @@ export default function Login() {
     }
     return errors;
   };
-
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  const errors = validate(formData);
-  if (Object.keys(errors).length === 0) {
-    try {
-      const response = await axios.post('https://localhost:7207/Auth/login', formData);
-      if (response.status === 200) {
-        // The original successful login handling
-        setApiMessage({ type: 'success', text: 'Login successful! Redirecting...' });
-        // Setting the cookie with the JWT token, assuming it's directly available in response.data.token
-        Cookies.set('userToken', response.data, { expires: 7 }); // Adjust the 'expires' value as needed
-        navigate('/home'); // Keep your original navigation timing
-
-        // If you have an Auth context setup, update it here as per your original logic
-        // e.g., setAuth({ token: response.data.token });
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const errors = validate(formData);
+    if (Object.keys(errors).length === 0) {
+      try {
+        const response = await axios.post('https://localhost:7207/Auth/login', formData);
+        if (response.status === 200) {
+          setApiMessage({ type: 'success', text: 'Login successful! Redirecting...' });
+  
+          // Adjust this line to correctly store the JWT token
+          Cookies.set('jwtToken', response.data, { expires: 7 }); // Use 'secure: true' in production
+  
+          navigate('/home');
+        }
+      } catch (error) {
+        setApiMessage({ type: 'error', text: error.response?.data?.message || 'Login failed. Please try again.' });
       }
-    } catch (error) {
-      setApiMessage({ type: 'error', text: error.response?.data?.message || 'Login failed. Please try again.' });
+    } else {
+      setFormErrors(errors);
     }
-  } else {
-    setFormErrors(errors);
-  }
-};
+  };
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>

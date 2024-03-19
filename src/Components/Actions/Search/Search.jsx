@@ -11,14 +11,27 @@ const Sidebar = () => {
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [expandedArticleIds, setExpandedArticleIds] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const userRole = "admin"; // Assume "admin" role for demonstration
-  const navigate = useNavigate(); // Initialize useNavigate
-  
+  const userRole = "admin";
+  const navigate = useNavigate();
+
+  // Helper function to get the value of a cookie by name
+  const getCookieValue = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await axios.get('https://localhost:7207/api/publications');
+        // Get the JWT token from cookies
+        const token = getCookieValue('jwtToken'); // Assuming the cookie name is jwtToken
+        console.log(token)
+        const response = await axios.get('https://localhost:7207/api/Publications', {
+          headers: {
+            Authorization: `bearer ${token}` // Use the token in the Authorization header
+          }
+        });
         setArticles(response.data);
         const flatMap = {};
         const flattenArticles = (articles) => {
