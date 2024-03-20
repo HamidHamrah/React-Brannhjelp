@@ -1,7 +1,8 @@
 /* navbar.css - Updated for Responsiveness */
 .navbar-container {
   background-color:  rgb(250, 250, 245);
-  margin-top: 15px;
+  margin-left: 20px;
+  margin-right: 20px;
   position: relative;
 }
 

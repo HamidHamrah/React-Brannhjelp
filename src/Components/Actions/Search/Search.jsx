@@ -4,6 +4,7 @@ import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, Ico
 import { ExpandMore, ExpandLess, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import {jwtDecode} from 'jwt-decode';
 
 const Sidebar = () => {
   const [articles, setArticles] = useState([]);
@@ -11,7 +12,7 @@ const Sidebar = () => {
   const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [expandedArticleIds, setExpandedArticleIds] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const userRole = "admin";
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
 
   // Helper function to get the value of a cookie by name
@@ -22,16 +23,29 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
+    // Fetch the JWT token from cookies
+    const token = getCookieValue('jwtToken');
+    if (token) {
+      // Decode the JWT token
+      const decoded = jwtDecode(token);
+      // Extract the user's role from the decoded token
+      const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      // Update the userRole state with the extracted role
+      setUserRole(role);
+    }
+
+    // Define a function to fetch articles
     const fetchArticles = async () => {
       try {
-        // Get the JWT token from cookies
-        const token = getCookieValue('jwtToken'); // Assuming the cookie name is jwtToken
+        // Make a GET request to fetch articles, using the JWT token in the Authorization header
         const response = await axios.get('https://localhost:7207/api/Publications', {
           headers: {
-            Authorization: `bearer ${token}` // Use the token in the Authorization header
-          }
+            Authorization: `Bearer ${token}`, // Ensure the Authorization header is correctly formatted
+          },
         });
-        setArticles(response.data);
+        setArticles(response.data); // Update the state with the fetched articles
+
+        // Flatten the articles and store them in a map for easy access
         const flatMap = {};
         const flattenArticles = (articles) => {
           articles.forEach(article => {
@@ -47,6 +61,8 @@ const Sidebar = () => {
         console.error('Error fetching articles:', error);
       }
     };
+
+    // Call the fetchArticles function
     fetchArticles();
   }, []);
 
@@ -97,7 +113,7 @@ const Sidebar = () => {
               <ArticleIcon color={isSelected ? "inherit" : "action"} />
             </ListItemIcon>
             <ListItemText primary={article.title} />
-            {userRole === "admin" && (
+            {userRole === "Admin" && (
               <IconButton
                 onClick={(e) => handleAddChildArticle(article.id, e)}
                 size="small"
