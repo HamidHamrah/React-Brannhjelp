@@ -26,7 +26,6 @@ const Sidebar = () => {
       try {
         // Get the JWT token from cookies
         const token = getCookieValue('jwtToken'); // Assuming the cookie name is jwtToken
-        console.log(token)
         const response = await axios.get('https://localhost:7207/api/Publications', {
           headers: {
             Authorization: `bearer ${token}` // Use the token in the Authorization header
