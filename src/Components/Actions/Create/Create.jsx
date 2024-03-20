@@ -17,6 +17,11 @@ export default function Create() {
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const parentId = location.state?.parentId; // Retrieve parentId from the navigation state
   
+  const getCookieValue = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
 
   const handlePost = async () => {
     const newId = Math.floor(Math.random() * 10000); // Generate a random new ID
@@ -34,13 +39,14 @@ export default function Create() {
 
   
     console.log(parentId); // Debug log to verify the article object
-  
-
     try {
+      const token = getCookieValue('jwtToken'); // Assuming the cookie name is jwtToken
       const response = await fetch('https://localhost:7207/api/Publications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `bearer ${token}` // Use the token in the Authorization header
+          
         },
         body: JSON.stringify(article),
       });

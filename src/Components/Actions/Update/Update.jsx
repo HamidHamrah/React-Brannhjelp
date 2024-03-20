@@ -17,20 +17,39 @@ function UpdatePublication() {
     content: '',
     parentId: '', // Initialize parentId
   });
-
+  const getCookieValue = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  };
   useEffect(() => {
+    const token = getCookieValue('jwtToken'); // Retrieve the JWT token from cookies
     const fetchUrl = `https://localhost:7207/api/Publications/${id}?UserId=${userId}`;
-    fetch(fetchUrl)
-      .then(response => response.json())
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `bearer ${token}`, // Include the JWT token in the Authorization header
+      },
+    };
+  
+    fetch(fetchUrl, options)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
       .then(data => {
         setArticle({
           title: data.title,
           content: data.content,
-          parentId: data.parentId, // Set parentId from fetched data
+          parentId: data.parentId,
         });
       })
       .catch(error => console.error('Error fetching article:', error));
-  }, [id, userId]);
+  }, [id, userId]); // Ensure dependencies are correct
+  
 
   const handleModelChange = (model) => {
     setArticle(prevArticle => ({ ...prevArticle, content: model }));
@@ -43,25 +62,30 @@ function UpdatePublication() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const token = getCookieValue('jwtToken'); // Retrieve the JWT token from cookies again
     const updateUrl = `https://localhost:7207/api/Publications/${id}`;
     fetch(updateUrl, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `bearer ${token}`, // Include the JWT token in the Authorization header
+      },
       body: JSON.stringify({
         ...article,
         updatedAt: new Date().toISOString(),
-        id: id, // Ensure this matches your API's expectations
-        userId: userId, // Include if necessary for your API
+        id: id,
+        userId: userId,
       }),
     })
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      navigate('/All'); // Adjust as needed for your routing setup
+      navigate('/All'); // Navigate upon successful update
     })
     .catch(error => console.error('Error updating article:', error));
   };
+  
 
   return (
     <Container maxWidth="md" sx={{ mt: 0, mb: 4, boxShadow: 0, borderRadius: 2, p: 3 }}>
