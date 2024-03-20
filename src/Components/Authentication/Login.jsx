@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext ,useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
@@ -29,6 +29,22 @@ export default function Login() {
     email: '',
     password: '',
   });
+  
+  useEffect(() => {
+    const token = Cookies.get('jwtToken');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp > currentTime) {
+          navigate('/home');
+        }
+      } catch (error) {
+        // Handle error if token is invalid or expired
+        console.error("Token decoding failed or token expired", error);
+      }
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,8 +75,9 @@ export default function Login() {
         if (response.status === 200) {
           setApiMessage({ type: 'success', text: 'Login successful! Redirecting...' });
   
-          // Adjust this line to correctly store the JWT token
-          Cookies.set('jwtToken', response.data, { expires: 7 }); // Use 'secure: true' in production
+          // Store the JWT token without a predefined expiration time
+          // Note: Consider using 'secure: true' and 'sameSite: 'Strict'' in production for enhanced security
+          Cookies.set('jwtToken', response.data, { secure: true, sameSite: 'Strict' });
   
           navigate('/home');
         }
@@ -71,6 +88,7 @@ export default function Login() {
       setFormErrors(errors);
     }
   };
+  
   
 
   return (
