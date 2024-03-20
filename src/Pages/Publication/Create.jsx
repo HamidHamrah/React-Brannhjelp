@@ -1,6 +1,6 @@
 import React from 'react'
-import Navbar from "../Components/Navbar/Navbar";
-import CreateSide from "../Components/Actions/Create/Create"
+import Navbar from "../../Components/Layout/Navbar";
+import CreateSide from "../../Components/Publiation/Create/Create"
 
 export default function Create() {
   return (

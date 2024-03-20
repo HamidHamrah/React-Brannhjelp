@@ -1,6 +1,6 @@
 import React from 'react'
-import NavBar from "../Components/Navbar/Navbar"
-import Updatee from "../Components/Actions/Update/Update"
+import NavBar from "../../Components/Layout/Navbar"
+import Updatee from "../../Components/Publiation/Update/Update"
 
 export default function Update() {
   return (

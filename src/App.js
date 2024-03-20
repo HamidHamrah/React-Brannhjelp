@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from "./Pages/Home"
-import Create from './Pages/Create';
-import AllPub from "./Pages/ListAllpublications"
-import './Components/Navbar/NavbarStyle.css';
-import './Components/Actions/Search/Search.css';
-import "./Components/Actions/Create/Create.css"
+import Home from "./Pages/Publication/Home"
+import Create from './Pages/Publication/Create';
+import AllPub from "./Pages/Publication/ListAllpublications"
+import './Components/Layout/NavbarStyle.css';
+import './Components/Publiation/Search/Search.css';
+import "./Components/Publiation/Create/Create.css"
 import "./Components/Authentication/Login.css"
-import "./Components/Actions/List/AllPub.css"
+import "./Components/Publiation/List-Delet/AllPub.css"
 import Login from './Components/Authentication/Login';
 import Register from './Components/Authentication/Register';
-import Update from "./Pages/Update"
+import Update from "./Pages/Publication/Update"
 import React from 'react';
 import { AuthProvider } from './AuthContext';
 

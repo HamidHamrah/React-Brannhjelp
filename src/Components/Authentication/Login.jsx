@@ -1,4 +1,4 @@
-import React, { useState, useContext ,useEffect} from 'react';
+import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Alert from '@mui/material/Alert'; // Import Alert for displaying messages
-import AuthContext from '../../AuthenProvider';
 import Cookies from 'js-cookie'; // Import js-cookie
 import { jwtDecode } from 'jwt-decode';
 
@@ -21,7 +20,6 @@ import { jwtDecode } from 'jwt-decode';
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const {setAuth} = useContext(AuthContext);
   const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState({});
   const [apiMessage, setApiMessage] = useState({ type: '', text: '' }); // New state for API messages
