@@ -5,10 +5,10 @@ import AllPub from "./Pages/Publication/ListAllpublications"
 import './Components/Layout/NavbarStyle.css';
 import './Components/Publiation/Search/Search.css';
 import "./Components/Publiation/Create/Create.css"
-import "./Components/Authentication/Login.css"
+
 import "./Components/Publiation/List-Delet/AllPub.css"
-import Login from './Components/Authentication/Login';
-import Register from './Components/Authentication/Register';
+import Login from './Components/Authentication/Auth/Login and Register/Login';
+import Register from './Components/Authentication/Auth/Login and Register/Register';
 import Update from "./Pages/Publication/Update"
 import React from 'react';
 import RequireAuth from "./Components/Authentication/Auth/RequireAuth"

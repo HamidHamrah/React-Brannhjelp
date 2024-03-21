@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import {jwtDecode} from 'jwt-decode';
-import Cookies from 'js-cookie'; // Assuming js-cookie is used for cookie management
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import {jwtDecode} from 'jwt-decode'; // Corrected import
 
 const AuthContext = createContext();
 
@@ -8,17 +9,18 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    // Check for JWT token in cookies and set user state accordingly
     const token = Cookies.get('jwtToken');
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
-          // Assuming decodedToken contains user information and role
-          // Update the user state with decoded token data if token is valid
-          setUser({ ...decodedToken });
+          // Normalize roles to an array and set user state
+          const roles = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+          const normalizedRoles = Array.isArray(roles) ? roles : [roles];
+          setUser({ ...decodedToken, roles: normalizedRoles });
         } else {
-          // Optional: handle expired token case, e.g., by logging out the user
           setUser(null);
         }
       } catch (error) {
@@ -28,16 +30,29 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Placeholder function to simulate login - this should be replaced with actual login logic
-  const login = async (username, password) => {
-    // Implement login logic here, which should include setting the JWT token in a cookie
-    // On successful login, decode the token and update the user state
+  const login = async (email, password) => {
+    try {
+      const response = await axios.post('https://localhost:7207/Auth/login', { email, password });
+      if (response.status === 200) {
+        Cookies.set('jwtToken', response.data, { secure: true, sameSite: 'Strict' });
+        
+        // Decode the token, normalize roles, and set user state
+        const decodedToken = jwtDecode(response.data);
+        const roles = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        const normalizedRoles = Array.isArray(roles) ? roles : [roles];
+        setUser({ ...decodedToken, roles: normalizedRoles });
+        
+        return { success: true };
+      }
+    } catch (error) {
+      console.error("Login failed", error);
+      return { success: false, message: error.response?.data?.message || 'Login failed. Please try again.' };
+    }
   };
 
   const logout = () => {
-    // Clear the JWT token from cookies to log out the user
     Cookies.remove('jwtToken');
-    setUser(null); // Reset the user state
+    setUser(null);
   };
 
   const value = { user, login, logout };

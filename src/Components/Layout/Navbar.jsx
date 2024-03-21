@@ -10,31 +10,23 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import {jwtDecode} from 'jwt-decode';
-import Cookies from 'js-cookie';
-import AccountCircle from '@mui/icons-material/AccountCircle'; // Import AccountCircle icon
-import Box from '@mui/material/Box'; // Import Box for layout
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Box from '@mui/material/Box';
 import Logo from "./Logo.png";
+import { useAuth } from '../Authentication/Auth/AuthContext'; // Import useAuth hook
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null); // State to manage user menu anchor
-  const [userName, setUserName] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const { user, logout } = useAuth(); // Destructure logout function from useAuth
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
-    const token = Cookies.get('jwtToken');
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        setUserName(decodedToken.sub); // Assuming 'sub' contains the username
-      } catch (error) {
-        console.error("Error decoding token: ", error);
-      }
-    }
-  }, []);
+    // If there's a need to fetch the user name from the user object
+    // setUserName(user ? user.name : null); // Adjust according to your user object structure
+  }, [user]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -53,16 +45,20 @@ const NavBar = () => {
   };
 
   const handleLogout = () => {
-    Cookies.remove('jwtToken'); // Remove JWT token
-    setUserName(null); // Update username state
+    logout(); // Use centralized logout logic
     handleCloseUserMenu(); // Close the user menu
-    navigate('/Login'); // Redirect to login page
+    navigate('/Home'); // Redirect to login page
   };
 
   const navigateTo = (path) => {
     handleCloseNavMenu();
     navigate(path);
   };
+
+  // The rest of your NavBar component remains unchanged
+  // Remember to replace userName with the appropriate property from the user object if necessary
+  const userName = user ? user.sub : null; // Example to get userName, adjust based on your actual user object structure
+
 
   return (
     <div className="navbar-container">

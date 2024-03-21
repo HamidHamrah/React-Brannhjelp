@@ -1,6 +1,6 @@
-import React, { useState ,useEffect} from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext'; // Import useAuth hook
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,37 +12,24 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Alert from '@mui/material/Alert'; // Import Alert for displaying messages
-import Cookies from 'js-cookie'; // Import js-cookie
-import { jwtDecode } from 'jwt-decode';
-
+import Alert from '@mui/material/Alert';
 
 const defaultTheme = createTheme();
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login, user } = useAuth(); // Use login function from AuthContext
   const [formErrors, setFormErrors] = useState({});
-  const [apiMessage, setApiMessage] = useState({ type: '', text: '' }); // New state for API messages
+  const [apiMessage, setApiMessage] = useState({ type: '', text: '' });
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  
+
   useEffect(() => {
-    const token = Cookies.get('jwtToken');
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-        if (decodedToken.exp > currentTime) {
-          navigate('/home');
-        }
-      } catch (error) {
-        // Handle error if token is invalid or expired
-        console.error("Token decoding failed or token expired", error);
-      }
-    }
-  }, [navigate]);
+    // Redirect if already logged in
+    if (user) navigate('/home');
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,70 +39,41 @@ export default function Login() {
 
   const validate = (values) => {
     const errors = {};
-    if (!values.email) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = "Email address is invalid";
-    }
-    if (!values.password) {
-      errors.password = "Password is required";
-    } else if (values.password.length < 8) {
-      errors.password = "Password must be at least 8 characters long";
-    }
+    if (!values.email) errors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(values.email)) errors.email = "Email address is invalid";
+    if (!values.password) errors.password = "Password is required";
+    else if (values.password.length < 8) errors.password = "Password must be at least 8 characters long";
     return errors;
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const errors = validate(formData);
     if (Object.keys(errors).length === 0) {
-      try {
-        const response = await axios.post('https://localhost:7207/Auth/login', formData);
-        if (response.status === 200) {
-          setApiMessage({ type: 'success', text: 'Login successful! Redirecting...' });
-  
-          // Store the JWT token without a predefined expiration time
-          // Note: Consider using 'secure: true' and 'sameSite: 'Strict'' in production for enhanced security
-          Cookies.set('jwtToken', response.data, { secure: true, sameSite: 'Strict' });
-  
-          navigate('/home');
-        }
-      } catch (error) {
-        setApiMessage({ type: 'error', text: error.response?.data?.message || 'Login failed. Please try again.' });
+      const { success, message } = await login(formData.email, formData.password);
+      if (success) {
+        setApiMessage({ type: 'success', text: 'Login successful! Redirecting...' });
+        navigate('/home');
+      } else {
+        setApiMessage({ type: 'error', text: message });
       }
     } else {
       setFormErrors(errors);
     }
   };
-  
-  
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
-          {/* Display API response message */}
-          {apiMessage.text && (
-            <Alert severity={apiMessage.type} sx={{ width: '100%', mt: 2 }}>
-              {apiMessage.text}
-            </Alert>
-          )}
+          <Typography component="h1" variant="h5">Login</Typography>
+          {apiMessage.text && <Alert severity={apiMessage.type} sx={{ width: '100%', mt: 2 }}>{apiMessage.text}</Alert>}
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              {/* Email Field */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -131,7 +89,6 @@ export default function Login() {
                   helperText={formErrors.email}
                 />
               </Grid>
-              {/* Password Field */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -149,19 +106,10 @@ export default function Login() {
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Login
-            </Button>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Login</Button>
             <Grid container justifyContent="flex-end">
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+                <Link href="#" variant="body2">Forgot password?</Link>
               </Grid>
               <Grid item>
                 <Link href="/Register" variant="body2">
@@ -175,3 +123,4 @@ export default function Login() {
     </ThemeProvider>
   );
 }
+
