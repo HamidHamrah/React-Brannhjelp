@@ -76,6 +76,7 @@ const NavBar = () => {
               <MenuItem onClick={() => navigateTo('/home')}>Home</MenuItem>
               <MenuItem onClick={() => navigateTo('/All')}>All Publications</MenuItem>
               <MenuItem onClick={() => navigateTo('/create')}>Create</MenuItem>
+              <MenuItem onClick={() => navigateTo('/#')}>Mange user</MenuItem>
             </Menu>
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
               Ignist
@@ -118,6 +119,7 @@ const NavBar = () => {
             <a href="/home" className="nav-link">Home</a>
             <a href="/All" className="nav-link">All Publications</a>
             <a href="/create" className="nav-link">Create</a>
+            <a href="#" className="nav-link">Mange user</a>
           </div>
           {userName ? (
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
