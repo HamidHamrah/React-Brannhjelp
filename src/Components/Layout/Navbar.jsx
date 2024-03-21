@@ -113,21 +113,23 @@ const NavBar = () => {
 
       ) : (
         <div className="navbar-item">
-          <img src={Logo} alt="Logo" className="navbar-logo" />
+          <a href="/home">
+            <img src={Logo} alt="Logo" className="navbar-logo" />
+          </a>
           <Typography variant="h5" component="div" className="navbar-title">Ignist</Typography>
           <div className="navbar-links">
             <MenuItem onClick={() => navigateTo('/home')}>
               <HomeIcon sx={{ mr: 1 }} /> Home {/* Home Icon */}
             </MenuItem>
             <MenuItem onClick={() => navigateTo('/create')}>
-                <CreateIcon sx={{ mr: 1 }} /> Create {/* Create Icon */}
-              </MenuItem>
-              <MenuItem onClick={() => navigateTo('/All')}>
-                <LibraryBooksIcon sx={{ mr: 1 }} /> All Publications {/* LibraryBooks Icon */}
-              </MenuItem>
-              <MenuItem onClick={() => navigateTo('/AllUsers')}>
-                <PeopleAltIcon sx={{ mr: 1 }} /> Manage user {/* PeopleAlt Icon */}
-              </MenuItem>
+              <CreateIcon sx={{ mr: 1 }} /> Create {/* Create Icon */}
+            </MenuItem>
+            <MenuItem onClick={() => navigateTo('/All')}>
+              <LibraryBooksIcon sx={{ mr: 1 }} /> All Publications {/* LibraryBooks Icon */}
+            </MenuItem>
+            <MenuItem onClick={() => navigateTo('/AllUsers')}>
+              <PeopleAltIcon sx={{ mr: 1 }} /> Manage user {/* PeopleAlt Icon */}
+            </MenuItem>
 
           </div>
           {userName ? (
