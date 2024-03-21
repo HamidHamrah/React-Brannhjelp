@@ -1,21 +1,36 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import {jwtDecode} from 'jwt-decode';
+import Cookies from 'js-cookie';
 
 const RequireAuth = ({ children }) => {
-  const { user } = useAuth();
-  let location = useLocation();
+  const location = useLocation();
+  const token = Cookies.get('jwtToken'); // Replace 'jwtToken' with your token's cookie name
 
-  // Check for user existence and for the 'Admin' role specifically
-  // This assumes that the role is correctly set in the user state within the AuthProvider
-  if (!user || !user.roles.includes('Admin')) {
-    // If no user is logged in or the user does not have the 'Admin' role,
-    // redirect to the login page with the current location in the state
-    // to potentially redirect back after successful login
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  // Initial state is unauthorized
+  let isAuthorized = false;
+
+  if (token) {
+    try {
+      const decodedToken = jwtDecode(token);
+      const roles = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      // Normalize roles to ensure it's an array
+      const normalizedRoles = Array.isArray(roles) ? roles : [roles];
+
+      // Check for 'Admin' role
+      isAuthorized = normalizedRoles.includes('Admin');
+    } catch (error) {
+      console.error("Error decoding token or token expired", error);
+      isAuthorized = false;
+    }
   }
 
-  // If the user is authenticated and authorized as an admin, render the children components
+  if (!isAuthorized) {
+    // Redirect unauthenticated or unauthorized users
+    return <Navigate to="/Login" state={{ from: location }} replace />;
+  }
+
+  // Render children for authorized users
   return children;
 };
 
