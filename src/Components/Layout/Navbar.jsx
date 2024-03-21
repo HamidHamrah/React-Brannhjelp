@@ -14,6 +14,10 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Box from '@mui/material/Box';
 import Logo from "./Logo.png";
 import { useAuth } from '../Authentication/Auth/AuthContext'; // Import useAuth hook
+import HomeIcon from '@mui/icons-material/Home';
+import CreateIcon from '@mui/icons-material/Create';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -107,15 +111,24 @@ const NavBar = () => {
           </Toolbar>
         </AppBar>
 
-) : (
+      ) : (
         <div className="navbar-item">
           <img src={Logo} alt="Logo" className="navbar-logo" />
           <Typography variant="h5" component="div" className="navbar-title">Ignist</Typography>
           <div className="navbar-links">
-            <a href="/home" className="nav-link">Home</a>
-            <a href="/All" className="nav-link">All Publications</a>
-            <a href="/create" className="nav-link">Create</a>
-            <a href="/AllUsers" className="nav-link">Mange user</a>
+            <MenuItem onClick={() => navigateTo('/home')}>
+              <HomeIcon sx={{ mr: 1 }} /> Home {/* Home Icon */}
+            </MenuItem>
+            <MenuItem onClick={() => navigateTo('/create')}>
+                <CreateIcon sx={{ mr: 1 }} /> Create {/* Create Icon */}
+              </MenuItem>
+              <MenuItem onClick={() => navigateTo('/All')}>
+                <LibraryBooksIcon sx={{ mr: 1 }} /> All Publications {/* LibraryBooks Icon */}
+              </MenuItem>
+              <MenuItem onClick={() => navigateTo('/AllUsers')}>
+                <PeopleAltIcon sx={{ mr: 1 }} /> Manage user {/* PeopleAlt Icon */}
+              </MenuItem>
+
           </div>
           {userName ? (
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
