@@ -11,22 +11,28 @@ import Login from './Components/Authentication/Login';
 import Register from './Components/Authentication/Register';
 import Update from "./Pages/Publication/Update"
 import React from 'react';
-import { AuthProvider } from './AuthContext';
+import RequireAuth from "./Components/Authentication/Auth/RequireAuth"
+import {AuthProvider} from "./Components/Authentication/Auth/AuthContext"
+import { useAuth } from './Components/Authentication/Auth/AuthContext';
 
 
 function App() {
+  const { user } = useAuth();
   return (
     <div>
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            {/* Public Routes */}
             <Route index element={<Home />} />
             <Route path='/home' element={<Home />} />
-            <Route path='/create' element={<Create />} />
-            <Route path='/All' element={<AllPub />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
-            <Route path="/update/:id" element={<Update />} />
+
+            {/* Protected Routes */}
+            <Route path='/create' element={<RequireAuth><Create /></RequireAuth>} />
+            <Route path='/All' element={<RequireAuth><AllPub /></RequireAuth>} />
+            <Route path="/update/:id" element={<RequireAuth><Update /></RequireAuth>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
