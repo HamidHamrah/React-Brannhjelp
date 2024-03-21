@@ -109,7 +109,7 @@ export default function Login() {
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Login</Button>
             <Grid container justifyContent="flex-end">
               <Grid item xs>
-                <Link href="#" variant="body2">Forgot password?</Link>
+                <Link href="ForgetPassword" variant="body2">Forgot password?</Link>
               </Grid>
               <Grid item>
                 <Link href="/Register" variant="body2">

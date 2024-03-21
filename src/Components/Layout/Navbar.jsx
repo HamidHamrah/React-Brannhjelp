@@ -115,7 +115,7 @@ const NavBar = () => {
             <a href="/home" className="nav-link">Home</a>
             <a href="/All" className="nav-link">All Publications</a>
             <a href="/create" className="nav-link">Create</a>
-            <a href="#" className="nav-link">Mange user</a>
+            <a href="/AllUsers" className="nav-link">Mange user</a>
           </div>
           {userName ? (
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
