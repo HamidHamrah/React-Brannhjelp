@@ -1,13 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client'; // Import from 'react-dom/client'
 import App from './App';
-import { AuthProvider } from './Components/Authentication/Auth/AuthContext'; // Correct import syntax
+import { AuthProvider } from './Components/Authentication/Auth/AuthContext'; // Assuming correct import syntax
 
-ReactDOM.render(
+// Use createRoot to create a root.
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
   <React.StrictMode>
-    <AuthProvider> {/* Correctly use AuthProvider as a named import */}
+    <AuthProvider> {/* Assuming AuthProvider is correctly imported */}
       <App />
     </AuthProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
