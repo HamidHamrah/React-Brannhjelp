@@ -17,7 +17,7 @@ import {AuthProvider} from "./Components/Authentication/Auth/AuthContext"
 import { useAuth } from './Components/Authentication/Auth/AuthContext';
 import AllUsers from "./Pages/User/AllUsers"
 import Read from "../src/Components/Publiation/Read/Read"
-
+import Copyright from "../src/Components/Layout/Footer"
 function App() {
   const { user } = useAuth();
   return (
@@ -42,6 +42,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      <Copyright sx={{ mt: 5 }} />
     </div>
   );
 }
