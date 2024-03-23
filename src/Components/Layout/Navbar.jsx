@@ -27,11 +27,6 @@ const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  useEffect(() => {
-    // If there's a need to fetch the user name from the user object
-    // setUserName(user ? user.name : null); // Adjust according to your user object structure
-  }, [user]);
-
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -59,9 +54,7 @@ const NavBar = () => {
     navigate(path);
   };
 
-  // The rest of your NavBar component remains unchanged
-  // Remember to replace userName with the appropriate property from the user object if necessary
-  const userName = user ? user.sub : null; // Example to get userName, adjust based on your actual user object structure
+  const userName = user ? user.sub : null;
 
 
   return (
@@ -130,7 +123,6 @@ const NavBar = () => {
             <MenuItem onClick={() => navigateTo('/AllUsers')}>
               <PeopleAltIcon sx={{ mr: 1 }} /> Manage user {/* PeopleAlt Icon */}
             </MenuItem>
-
           </div>
           {userName ? (
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
