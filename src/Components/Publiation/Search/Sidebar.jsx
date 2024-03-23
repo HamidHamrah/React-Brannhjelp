@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton, ListItemIcon } from '@mui/material';
+import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton, ListItemIcon, Grid } from '@mui/material';
 import { ExpandMore, ExpandLess, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
@@ -40,7 +40,7 @@ const Sidebar = () => {
         // Make a GET request to fetch articles, using the JWT token in the Authorization header
         const response = await axios.get('https://localhost:7207/api/Publications', {
           headers: {
-            Authorization: `Bearer ${token}`, // Ensure the Authorization header is correctly formatted
+            Authorization: `bearer ${token}`, // Ensure the Authorization header is correctly formatted
           },
         });
         setArticles(response.data); // Update the state with the fetched articles
@@ -66,9 +66,6 @@ const Sidebar = () => {
     fetchArticles();
   }, []);
 
-  const handleArticleSelect = (articleId) => {
-    setSelectedArticleId(articleId);
-  };
 
   const toggleArticleExpansion = (articleId) => {
     setExpandedArticleIds(prevState => ({
@@ -76,7 +73,11 @@ const Sidebar = () => {
       [articleId]: !prevState[articleId]
     }));
   };
+  const handleArticleSelect = (articleId) => {
+    setSelectedArticleId(articleId);
+  };
 
+  
   const handleAddParentArticle = (e) => {
     e.stopPropagation();
     navigate('/create', { state: { parentId: null } });
@@ -101,12 +102,12 @@ const Sidebar = () => {
             sx={{ 
               pl: depth * 2, 
               mb: 1, 
-              bgcolor: isSelected ? 'primary.light' : 'background.paper',
+              bgcolor: isSelected ? '#daeaf1' : 'background.paper',
               '&:hover': {
-                bgcolor: 'primary.main',
-                color: 'primary.contrastText',
+                bgcolor: '#8cbfd3',
+                color: '#000000',
               },
-              color: isSelected ? 'primary.contrastText' : 'text.primary',
+              color: isSelected ? '#000000' : '#000000',
             }}
           >
             <ListItemIcon>
@@ -148,42 +149,36 @@ const Sidebar = () => {
   const selectedArticle = articleMap[selectedArticleId];
 
   return (
-    <Box className="layout-container" sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, height: '100vh', overflow: 'hidden' }}>
-      <Box className="search-and-list" sx={{ width: { xs: '100%', md: '25%' }, flexShrink: 0, maxHeight: '100vh', overflowY: 'auto' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    <Box className="sidebar-container">
+      <Box className="search-and-list">
+        <Box>
+          <div className="search-input">
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           {userRole === "admin" && (
             <IconButton
               onClick={handleAddParentArticle}
-              color="primary"
+              color="#f2f8fa"
               aria-label="add parent article"
             >
               <AddIcon />
             </IconButton>
           )}
         </Box>
-        <List>
+        <List className="articles-list">
           {renderArticles(articles.filter(article =>
             article.title.toLowerCase().includes(searchTerm.toLowerCase())))
           }
         </List>
       </Box>
-      <Box className="article-content" sx={{ flexGrow: 1, minWidth: { md: '500px' }, maxWidth: { md: '70%' }, overflowY: 'auto', p: 3 }}>
-        {selectedArticle && (
-          <>
-            <Typography variant="h5" component="h2" className="article-title">{selectedArticle.title}</Typography>
-            <Typography variant="body1" className="article-body" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedArticle.content) }}></Typography>
-          </>
-        )}
-      </Box>
     </Box>
-  );
+  );  
 };
 
 export default Sidebar;

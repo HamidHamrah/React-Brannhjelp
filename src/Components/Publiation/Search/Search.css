@@ -1,131 +1,38 @@
 .sidebar-container {
-    width: 100%;
-  }
-  
-  .search-container {
-    padding: 10px;
-    background-color: #f10000;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
+  width: 100%; /* Full width on small screens */
+  height: 100vh; /* Full viewport height */
+  overflow-y: auto; /* Enable vertical scrollbar if content overflows */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 10px; /* Padding around internal content */
+  box-sizing: border-box; /* Include padding and border in the element's width and height */
+  background-color:#f2f8fa; /* Light background color */
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box; /* Ensure padding doesn't affect overall width */
+  background-color:#ffffff;
+}
+
+
+.article-title {
+  font-weight: bold;
+  color: #333;
+  padding: 10px;
+  margin-bottom: 10px; /* Space between titles */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Responsive adjustments for larger screens */
+@media (min-width: 768px) {
+  .sidebar-container {
+    width: 25%; /* 1/3 of the width on larger screens */
+    float: left; /* Align to the left side */
   }
   
   .articles-list {
-    padding: 10px;
-    background-color: #e0e0e0;
-    /* Gray background */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow for depth */
-    border-radius: 4px;
-    /* Rounded corners */
-    max-height: 400px;
-    /* Or adjust based on your layout */
-    overflow-y: auto;
-    /* Show scrollbar when needed */
-    margin-bottom: 20px;
-    /* Space below the list */
+    max-height: 600px; /* Adjusted max height for more content */
   }
-  
-  
-  .article-title {
-    cursor: pointer;
-    margin-bottom: 10px;
-    background-color: #e9e9e9;
-    padding: 10px;
-    border-radius: 4px;
-  }
-  
-  .layout-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .article-title {
-    /* Specific styles for the title */
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: #333;
-    background-color: rgb(250, 250, 245);
-    width: 95%;
-    padding: 10px;
-    margin:10px;
-  }
-  
-  .article-body {
-    /* Specific styles for the body/content */
-    font-size: 16;
-    line-height: 1.6;
-    color: #000000;
-    background-color: rgb(250, 250, 245);
-    width: 95%;
-    height: 70%;
-    margin: 10px;
-    padding: 10px;
-  }
-  .article-body table {
-    width: 100%; /* Adjust as needed */
-    max-width: 100%; /* Ensures the table does not exceed the container's width */
-    table-layout: fixed; /* This helps in making the table layout more predictable */
-    overflow-x: auto; /* Enables horizontal scrolling on smaller screens */
-  }
-  
-  
-  .article-body th, .article-body td {
-    border: 1px solid rgb(187, 107, 107); /* Make lines visible */
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .article-body th {
-    background-color: #f2f2f2;
-  }
-  
-  
-
-  @media (min-width: 768px) {
-  
-    .sidebar,
-    .articles-list {
-      max-height: 600px;
-      max-width: 20%;
-      /* Adjust based on the expected screen size and layout */
-      overflow-y: auto;
-      /* Maintain scrollbar functionality */
-    }
-  
-    .layout-container {
-      flex-direction: row;
-    }
-  
-    .search-and-list {
-      width: 25%;
-      margin-left: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      padding: 2px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      /* Subtle shadow for depth */
-      border-radius: 4px;
-      /* Rounded corners */
-      overflow-y: auto;
-      /* Show scrollbar when needed */
-      height: 100vh;
-    }
-  
-    .article-content {
-      flex-grow: 1;
-      padding-left: 20px;
-      /* Or appropriate spacing */
-    }
-    .article-body table {
-      width: 100%;
-      table-layout: auto;
-    }
-    .article-body th, .article-body td {
-      padding: 10px; /* Adjust padding to save space */
-    }
-  }
+}

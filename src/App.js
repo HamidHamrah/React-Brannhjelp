@@ -16,6 +16,7 @@ import RequireAuth from "./Components/Authentication/Auth/RequireAuth"
 import {AuthProvider} from "./Components/Authentication/Auth/AuthContext"
 import { useAuth } from './Components/Authentication/Auth/AuthContext';
 import AllUsers from "./Pages/User/AllUsers"
+import Read from "../src/Components/Publiation/Read/Read"
 
 function App() {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ function App() {
             {/* Public Routes */}
             <Route index element={<Home />} />
             <Route path='/home' element={<Home />} />
+            <Route path='Read/' element={<Read />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
             <Route path="/ForgetPassword" element={<ForgetPassword />} />
