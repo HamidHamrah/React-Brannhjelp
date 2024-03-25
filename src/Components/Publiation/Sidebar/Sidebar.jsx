@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, TextField, List, ListItem, ListItemText, Typography, Collapse, IconButton, ListItemIcon, Grid } from '@mui/material';
+import { Box, TextField, List, ListItem, ListItemText, Collapse, IconButton, ListItemIcon } from '@mui/material';
 import { ExpandMore, ExpandLess, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material';
-import DOMPurify from 'dompurify';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import {jwtDecode} from 'jwt-decode';
 
-const Sidebar = () => {
+const Sidebar = ({ onArticleSelect }) => {
   const [articles, setArticles] = useState([]);
   const [articleMap, setArticleMap] = useState({});
   const [selectedArticleId, setSelectedArticleId] = useState(null);
@@ -74,8 +73,8 @@ const Sidebar = () => {
     }));
   };
   const handleArticleSelect = (articleId) => {
-    setSelectedArticleId(articleId);
-  };
+    onArticleSelect(articleId); // call the callback with the selected article's ID
+};
 
   
   const handleAddParentArticle = (e) => {

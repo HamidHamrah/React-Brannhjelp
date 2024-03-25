@@ -3,7 +3,7 @@ import Home from "./Pages/Publication/Home"
 import Create from './Pages/Publication/Create';
 import AllPub from "./Pages/Publication/ListAllpublications"
 import './Components/Layout/NavbarStyle.css';
-import './Components/Publiation/Search/Search.css';
+import './Components/Publiation/Sidebar/Search.css';
 import "./Components/Publiation/Create/Create.css"
 import "./Components/Publiation/List-Delet/AllPub.css"
 import Login from './Components/Authentication/Auth/Login and Register/Login';

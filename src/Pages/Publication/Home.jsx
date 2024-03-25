@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-import Sidebar from '../../Components/Publiation/Search/Sidebar'; // Adjust the import path as necessary
+import Sidebar from '../../Components/Publiation/Sidebar/Sidebar'; // Adjust the import path as necessary
 import ArticleDisplay from '../../Components/Publiation//Read/Read'; // Adjust the import path as necessary
 import Navbar from "../../Components/Layout/Navbar";
 
-const ArticlesPage = () => {
+const Home = () => {
   const [selectedArticleId, setSelectedArticleId] = useState(null);
-  const [userId, setUserId] = useState(null); // Assuming you have a way to set this, e.g., from user authentication
+
+  // Callback function for updating selected article ID
+  const handleArticleSelect = (articleId) => {
+      setSelectedArticleId(articleId);
+  };
 
   return (
-    <div>
-      <Navbar />
-      <Sidebar onSelectArticle={setSelectedArticleId} />
-      {selectedArticleId && <ArticleDisplay articleId={selectedArticleId} userId={userId} />}
-    </div>
+      <div>
+            <Navbar />
+          <Sidebar onArticleSelect={handleArticleSelect} />
+          <ArticleDisplay selectedArticleId={selectedArticleId} />
+          {/* Other components like Navbar can remain as is */}
+      </div>
   );
 };
 
-export default ArticlesPage;
+export default Home;
