@@ -54,7 +54,7 @@ if (!article) {
       margin: 'auto',
       mt: 5,
       overflow: 'hidden',
-      maxHeight: '90vh',
+      maxHeight: '85vh',
       display: 'flex',
       flexDirection: 'column'
     }}>
@@ -70,9 +70,6 @@ if (!article) {
         flexGrow: 1,
         padding: '0 16px' // Adds padding to the sides of the content area
       }}>
-        <Typography variant="caption" display="block" gutterBottom sx={{ mt: 2 }}>
-          Created: {new Date(article.createdAt).toLocaleString()}
-        </Typography>
         <Typography variant="caption" display="block">
           Last Updated: {new Date(article.updatedAt).toLocaleString()}
         </Typography>
