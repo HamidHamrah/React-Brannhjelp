@@ -5,8 +5,6 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton,
   Snackbar, Alert
 } from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -45,19 +43,21 @@ export default function UserManagement() {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
   };
-
   const handleDeleteUser = async () => {
     try {
-      const response = await fetch(`https://localhost:7207/Auth/users/${selectedUser.id}`, {
+      const email = encodeURIComponent(selectedUser.email); // Make sure selectedUser.email is correctly referenced
+      console.log(email)
+      const response = await fetch(`https://localhost:7207/Auth/delete-user/${email}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${getCookieValue('jwtToken')}`
+          Authorization: `bearer ${getCookieValue('jwtToken')}` // Ensure the token is correctly retrieved
         }
       });
       if (!response.ok) {
         throw new Error('Failed to delete user');
       }
-      setUsers(users.filter(user => user.id !== selectedUser.id));
+      // Update the local state to remove the deleted user
+      setUsers(users.filter(user => user.email !== selectedUser.email));
       setSnackbarMessage('User deleted successfully');
       setSnackbarOpen(true);
       handleCloseDeleteDialog();
@@ -67,7 +67,8 @@ export default function UserManagement() {
       setSnackbarOpen(true);
     }
   };
-
+  
+  
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
@@ -79,8 +80,9 @@ export default function UserManagement() {
 
   const handleEditUser = (user) => {
     // Navigate to edit user page
-    navigate(`/edit-user/${user.id}`);
+    navigate("Update");
   };
+  
 
   const renderRows = () => {
     return users.map(user => (

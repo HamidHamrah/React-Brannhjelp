@@ -18,6 +18,8 @@ import { useAuth } from './Components/Authentication/Auth/AuthContext';
 import AllUsers from "./Pages/User/AllUsers"
 import Read from "../src/Components/Publiation/Read/Read"
 import Copyright from "../src/Components/Layout/Footer"
+import UpdateUser from "../src/Pages/User/Update"
+
 function App() {
   const { user } = useAuth();
   return (
@@ -39,6 +41,7 @@ function App() {
             <Route path='/All' element={<RequireAuth><AllPub /></RequireAuth>} />
             <Route path="/update/:id" element={<RequireAuth><Update /></RequireAuth>} />
             <Route path='/AllUsers' element={<RequireAuth><AllUsers /></RequireAuth>} />
+            <Route path='/Update/:email' element={<RequireAuth><UpdateUser /></RequireAuth>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
