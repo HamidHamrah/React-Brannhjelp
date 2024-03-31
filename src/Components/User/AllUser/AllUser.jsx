@@ -79,9 +79,11 @@ export default function UserManagement() {
   };
 
   const handleEditUser = (user) => {
-    // Navigate to edit user page
-    navigate("Update");
-  };
+    // Encode the email to ensure it's a safe URL component
+    const emailParam = encodeURIComponent(user.email);
+    // Navigate using dynamic segment
+    navigate(`/edit-user/${emailParam}`);
+  };  
   
 
   const renderRows = () => {
