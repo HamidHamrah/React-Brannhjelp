@@ -5,7 +5,6 @@ Ignist ønsker en brukervennlig webapplikasjon som kan fungere som et bibliotek 
 File structure
 
 =======
->>>>>>> 5ead8d7bd87c9fc748a03ab729ab9cde56b31747
 - src
   - App.js
   - pages
