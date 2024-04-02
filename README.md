@@ -1,4 +1,3 @@
-File structure
 .
 ├── src
 │   ├── App.js
