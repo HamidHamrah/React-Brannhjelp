@@ -5,7 +5,7 @@ import AllPub from "./Pages/Publication/ListAllpublications"
 import './Components/Layout/NavbarStyle.css';
 import './Components/Publiation/Sidebar/Search.css';
 import "./Components/Publiation/Create/Create.css"
-import "./Components/Publiation/List-Delet/AllPub.css"
+import "./Components/Publiation/List-Delete/AllPub.css"
 import Login from './Components/Authentication/Auth/Login and Register/Login';
 import Register from './Components/Authentication/Auth/Login and Register/Register';
 import ForgetPassword from './Components/Authentication/Auth/ForgetPassword/ForgetPassword';
