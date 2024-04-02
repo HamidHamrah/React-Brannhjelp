@@ -2,36 +2,21 @@ Ignist ønsker en brukervennlig webapplikasjon som kan fungere som et bibliotek 
 
 
 File structure
-
-.-------src
-    |--------App.js
-    |
-    |+--------pages
-    |
-    |+--------Components
-        |
-        |+------Authentication
-        |    |
-        |    |+----------ForgetPassword
-        |    |
-        |    |+----------Loging and Register
-        |+------Layout
-        |   
-        |+-----Publications.
-        |    |
-        |    |+--------Create
-        |    |
-        |    |+--------List-Delete
-        |    |
-        |    |+---------Read
-        |    |
-        |    |+---------Sidbar
-        |    |
-        |    |+---------Update
-        |
-        |+------Users
-        |    |
-        |    |+---------AllUsers
-        |    |
-        |    |+---------Update
- 
+.
+├── src
+│   ├── App.js
+│   ├── pages
+│   ├── Components
+│   │   ├── Authentication
+│   │   │   ├── ForgetPassword
+│   │   │   └── Login and Register
+│   │   ├── Layout
+│   │   └── Publications
+│   │       ├── Create
+│   │       ├── List-Delete
+│   │       ├── Read
+│   │       ├── Sidebar
+│   │       └── Update
+│   └── Users
+│       ├── AllUsers
+│       └── Update
