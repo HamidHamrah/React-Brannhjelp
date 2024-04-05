@@ -43,21 +43,23 @@ export default function UserManagement() {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
   };
+
   const handleDeleteUser = async () => {
     try {
-      const email = encodeURIComponent(selectedUser.email); // Make sure selectedUser.email is correctly referenced
-      console.log(email)
-      const response = await fetch(`https://localhost:7207/Auth/delete-user/${email}`, {
+      // Use selectedUser.id instead of selectedUser.email for deletion
+      const userId = encodeURIComponent(selectedUser.id);
+      console.log(userId)
+      const response = await fetch(`https://localhost:7207/Auth/delete-user/${userId}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `bearer ${getCookieValue('jwtToken')}` // Ensure the token is correctly retrieved
+          Authorization: `bearer ${getCookieValue('jwtToken')}`
         }
       });
       if (!response.ok) {
         throw new Error('Failed to delete user');
       }
-      // Update the local state to remove the deleted user
-      setUsers(users.filter(user => user.email !== selectedUser.email));
+      // Update the local state to remove the deleted user by ID instead of email
+      setUsers(users.filter(user => user.id !== selectedUser.id));
       setSnackbarMessage('User deleted successfully');
       setSnackbarOpen(true);
       handleCloseDeleteDialog();
@@ -67,8 +69,7 @@ export default function UserManagement() {
       setSnackbarOpen(true);
     }
   };
-  
-  
+
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
@@ -79,12 +80,8 @@ export default function UserManagement() {
   };
 
   const handleEditUser = (user) => {
-    // Encode the email to ensure it's a safe URL component
-    const emailParam = encodeURIComponent(user.email);
-    // Navigate using dynamic segment
-    navigate(`/edit-user/${emailParam}`);
-  };  
-  
+    navigate(`/edit-user/${user.id}`);
+  };
 
   const renderRows = () => {
     return users.map(user => (

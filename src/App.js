@@ -41,7 +41,7 @@ function App() {
             <Route path='/All' element={<RequireAuth><AllPub /></RequireAuth>} />
             <Route path="/update/:id" element={<RequireAuth><Update /></RequireAuth>} />
             <Route path='/AllUsers' element={<RequireAuth><AllUsers /></RequireAuth>} />
-            <Route path='/edit-user/:email' element={<RequireAuth><UpdateUser /></RequireAuth>} />
+            <Route path='/edit-user/:id' element={<RequireAuth><UpdateUser /></RequireAuth>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

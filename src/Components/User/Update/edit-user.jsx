@@ -2,25 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Container, Snackbar, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-
 function UserUpdateForm() {
-  const { email: encodedEmail } = useParams();
+  // Use ID from the URL parameters
+  const { id } = useParams();
   const navigate = useNavigate();
 
+  // Initialize user state with ID
   const [user, setUser] = useState({
+    id: id,
     userName: '',
-    email: decodeURIComponent(encodedEmail),
-    newEmail: '', // Initialize if you need a separate field for updating email
-    role: '', // Make sure to initialize role
+    lastName: '',
+    email: '',
+    role: '',
   });
-  
+
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
-    severity: 'info', // can be "error", "warning", "info", "success"
+    severity: 'info', // Can be "error", "warning", "info", "success"
   });
 
+  // Function to get the cookie value by name
   const getCookieValue = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -28,47 +31,69 @@ function UserUpdateForm() {
   };
 
   useEffect(() => {
-    const token = getCookieValue('jwtToken');
-    const fetchUrl = `https://localhost:7207/Auth/aboutme?email=${user.email}`;
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    };
+    if (id) { // Only proceed if id is defined
+      const token = getCookieValue('jwtToken');
+      const fetchUrl = `https://localhost:7207/Auth/aboutme?id=${id}`;
 
-    fetch(fetchUrl, options)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setUser({
-          userName: data.userName,
-          email: data.email,
-          role: data.role,
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `bearer ${token}`,
+        },
+      };
+
+      fetch(fetchUrl, options)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setUser({
+            id: id,
+            userName: data.userName,
+            lastName:data.lastName,
+            email: data.email,
+            role: data.role,
+          });
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching user:', error);
+          setLoading(false);
         });
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching user:', error);
-        setLoading(false);
-      });
-  }, [user.email]); // Reacting to email state change can lead to unintended re-fetches, consider restructuring if this becomes an issue
+    }
+  }, [id]); // Depend on ID
 
+
+  // Handle input change
   const handleChange = (event) => {
+    console.log(event.target); // Add this to inspect the event object
     const { name, value } = event.target;
     setUser(prevUser => ({ ...prevUser, [name]: value }));
   };
 
+
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = getCookieValue('jwtToken'); // Assume you have a similar method to fetch JWT token
-    const updateUrl = `https://localhost:7207/Auth/update-user/${encodeURIComponent(user.email)}`;
-  
+    const token = getCookieValue('jwtToken');
+    const updateUrl = `https://localhost:7207/Auth/update-user/${user.id}`; // Using the userId from the user state
+
+    // Adjust the payload to match the API's expected format
+    const requestBody = {
+      userName: user.userName,
+      lastName: user.lastName,
+      newEmail: user.email, // Use newEmail instead of email to match the API's expectation
+      role: user.role,
+    };
+
+    console.log("Sending update request to URL:", updateUrl);
+    console.log("With payload:", requestBody);
+
     try {
       const response = await fetch(updateUrl, {
         method: 'PUT',
@@ -76,27 +101,24 @@ function UserUpdateForm() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          userName: user.userName,
-          newEmail: user.email, // Adjust based on your API. If the API expects "email", use that instead.
-          role: user.role,
-        }),
+        body: JSON.stringify(requestBody),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
       }
-  
+
       setSnackbar({ open: true, message: 'User updated successfully', severity: 'success' });
-      navigate('/AllUsers'); // Adjust the navigation target as needed
+      navigate('/AllUsers');
     } catch (error) {
       console.error('Error updating user:', error);
-      setSnackbar({ open: true, message: 'Failed to update user due to a network error or other unexpected issue.', severity: 'error' });
+      setSnackbar({ open: true, message: `Failed to update user due to a network error or other unexpected issue: ${error.message}`, severity: 'error' });
     }
   };
-  
-  
 
+
+
+  // Handle snackbar close
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -121,6 +143,19 @@ function UserUpdateForm() {
           value={user.userName}
           onChange={handleChange}
         />
+
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="lastName"
+          label="lastName"
+          name="lastName"
+          autoComplete="lastName"
+          autoFocus
+          value={user.lastName}
+          onChange={handleChange}
+        />
         <TextField
           margin="normal"
           required
@@ -138,7 +173,7 @@ function UserUpdateForm() {
             labelId="role-label"
             id="role"
             name="role"
-            value={user.role}
+            value={user.role || ''}
             label="Role"
             onChange={handleChange}
           >
