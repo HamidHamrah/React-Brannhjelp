@@ -5,9 +5,9 @@ import AllPub from "./Pages/Publication/ListAllpublications"
 import './Components/Layout/NavbarStyle.css';
 import './Components/Publiation/Sidebar/Search.css';
 import "./Components/Publiation/Create/Create.css"
-import "./Components/Publiation/List-Delete/AllPub.css"
-import Login from './Components/Authentication/Auth/Login and Register/Login';
-import Register from './Components/Authentication/Auth/Login and Register/Register';
+import "./Components/Publiation/ListDelete/AllPub.css"
+import Login from './Components/Authentication/Auth/LoginRegister/Login';
+import Register from './Components/Authentication/Auth/LoginRegister/Register';
 import ForgetPassword from './Components/Authentication/Auth/ForgetPassword/ForgetPassword';
 import ResetPassword from './Components/Authentication/Auth/ForgetPassword/ResetPassword';
 import Update from "./Pages/Publication/Update"
