@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Sidebar from '../../Components/Publiation/Sidebar/Sidebar'; // Adjust the import path as necessary
-import ArticleDisplay from '../../Components/Publiation//Read/Read'; // Adjust the import path as necessary
+import Sidebar from '../../Components/Publiation/Sidebar/Sidebar'; // Corrected import path
+import ArticleDisplay from '../../Components/Publiation/Read/Read'; // Corrected import path
 import Navbar from "../../Components/Layout/Navbar";
 
 const Home = () => {
@@ -8,16 +8,20 @@ const Home = () => {
 
   // Callback function for updating selected article ID
   const handleArticleSelect = (articleId) => {
-      setSelectedArticleId(articleId);
+    setSelectedArticleId(articleId);
   };
 
   return (
-      <div>
-            <Navbar />
-          <Sidebar onArticleSelect={handleArticleSelect} />
-          <ArticleDisplay selectedArticleId={selectedArticleId} />
-          {/* Other components like Navbar can remain as is */}
-      </div>
+    <div>
+      <Navbar />
+      <Sidebar onArticleSelect={handleArticleSelect} />
+      {/* Passing handleArticleSelect to ArticleDisplay */}
+      <ArticleDisplay
+        selectedArticleId={selectedArticleId}
+        onSelectArticle={handleArticleSelect} // Passing the function to handle selection
+      />
+      {/* Other components like Navbar can remain as is */}
+    </div>
   );
 };
 

@@ -1,81 +1,101 @@
 import React, { useEffect, useState } from 'react';
-// Assuming you're using Material UI for styling
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, CircularProgress, ListItemIcon } from '@mui/material';
+import WhatshotIcon from '@mui/icons-material/Whatshot'; // Fire icon
 import DOMPurify from 'dompurify';
-import { CircularProgress } from '@mui/material';
- 
-const Read = ({ selectedArticleId }) => {
+
+const Read = ({ selectedArticleId, onSelectArticle }) => {
   const [article, setArticle] = useState(null);
+  const [topArticles, setTopArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const userId = "Hamid";
   useEffect(() => {
-    const fetchArticle = async () => {
-      if (selectedArticleId) {
-        try {
-          // Adjust the fetch URL to match your API endpoint and include any necessary headers
-          const url = `https://localhost:7207/api/Publications/${selectedArticleId}?UserId=${userId}`;
-          const response = await fetch(url);
-          const articleData = await response.json();
-          setArticle(articleData);
-        } catch (error) {
-          console.error("Failed to fetch article:", error);
-          // Handle the error appropriately
-        }
+    const fetchArticle = async (id) => {
+      try {
+        setIsLoading(true);
+        const url = `https://localhost:7207/api/Publications/${id}?UserId=Hamid`;
+        const response = await fetch(url);
+        const articleData = await response.json();
+        setArticle(articleData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch article:", error);
+        setIsLoading(false);
       }
     };
 
-    fetchArticle();
-  }, [selectedArticleId]); // Re-fetch when `selectedArticleId` changes
+    if (selectedArticleId) {
+      fetchArticle(selectedArticleId);
+    } else {
+      fetchTopArticles();
+    }
+  }, [selectedArticleId]);
 
-   // Display loading indicator while fetching article
-   if (isLoading) {
+  const fetchTopArticles = async () => {
+    try {
+      setIsLoading(true);
+      const url = `https://localhost:7207/api/Publications`;
+      const response = await fetch(url);
+      const articles = await response.json();
+      setTopArticles(articles.slice(0, 10)); // Limit to the top 6 articles
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch top articles:", error);
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="90vh">
-            <CircularProgress />
-        </Box>
-    );
-}
-
-// If no article is selected or available yet
-if (!article) {
-  return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="90vh" textAlign="center">
-          <Typography variant="h6" color="textSecondary">
-              No article selected or article is loading...
-          </Typography>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="90vh">
+        <CircularProgress />
       </Box>
-  );
-}
+    );
+  }
+
+  if (!article && topArticles.length > 0) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="90vh" flexWrap="wrap">
+        {topArticles.map((article) => (
+          <Box key={article.id} sx={{ margin: 2, cursor: 'pointer' }} onClick={() => onSelectArticle(article.id)}>
+            <Card sx={{ width: 300, height: 300, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <CardContent>
+                <Typography variant="h6">{article.title}</Typography>
+                <ListItemIcon sx={{ fontSize: '3rem' }}> 
+                  <WhatshotIcon color="error" sx={{ fontSize: 64 }} /> {/* Large fire icon */}
+                </ListItemIcon>
+              </CardContent>
+            </Card>
+          </Box>
+        ))}
+      </Box>
+    );
+  }
+
+  if (!article) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="90vh" textAlign="center">
+        <Typography variant="h6" color="textSecondary">
+          No article selected or article is loading...
+        </Typography>
+      </Box>
+    );
+  }
+
   const cleanHTML = DOMPurify.sanitize(article.content);
   return (
     <Card raised sx={{
-      width: '70%',
-      margin: 'auto',
-      mt: 5,
-      overflow: 'hidden',
-      maxHeight: '85vh',
-      display: 'flex',
-      flexDirection: 'column'
+      width: '70%', margin: 'auto', mt: 5, overflow: 'hidden', maxHeight: '85vh', display: 'flex', flexDirection: 'column'
     }}>
-      {/* Title section - Always visible */}
       <CardContent sx={{ padding: '16px' }}>
         <Typography variant="h4" component="h1" gutterBottom>
           {article.title}
         </Typography>
       </CardContent>
-      {/* Scrollable content section */}
-      <CardContent sx={{
-        overflowY: 'auto',
-        flexGrow: 1,
-        padding: '0 16px' // Adds padding to the sides of the content area
-      }}>
+      <CardContent sx={{ overflowY: 'auto', flexGrow: 1, padding: '0 16px' }}>
         <Typography variant="caption" display="block">
           Last Updated: {new Date(article.updatedAt).toLocaleString()}
         </Typography>
-        <Box sx={{
-          padding: '16px' // Adds vertical padding around the content, maintaining the side paddings
-        }}>
+        <Box sx={{ padding: '16px' }}>
           <div dangerouslySetInnerHTML={{ __html: cleanHTML }} />
         </Box>
       </CardContent>
