@@ -1,4 +1,37 @@
-Ignist ønsker en brukervennlig webapplikasjon som kan fungere som et bibliotek av informasjon for deres kunder. Webapplikasjonen, kalt “Brannhjelp”, skal bestå av en administrator- og en kunde-del. I dag har Ignist ingen eksisterende løsning for publisering av info med krav om betaling fra deres kunder. Ignist ønsker at systemet er bygget med tanke på fremtidig integrasjon av betalingsløsning. De ønsker også at informasjonen fra Brannhjelp skal kunne integreres inn i eksisterende programvare de har utviklet, kalt STRGI, via API. 
+* Web Application Overview
+This web application serves multiple purposes, primarily enabling organizations to publish articles on a website where users can access them by logging in. It supports CRUD operations for managing articles and user information. Administrators can manage both articles and user accounts, whereas users can manage their own information only.
+
+Prerequisites
+
+Ensure the following are installed on your computer:
+
+Visual Studio Code
+Node.js
+.NET 8 or newer
+
+Running the Application
+
+Backend Setup:
+
+Clone the backend repository:
+bash
+Copy code
+git clone https://github.com/HamidHamrah/Net-Ignist.git
+Install the necessary NuGet packages.
+Run the backend project.
+Frontend Setup:
+
+Clone the frontend repository:
+bash
+Copy code
+git clone https://github.com/HamidHamrah/React-Ignist.git
+Open Visual Studio Code and navigate to the frontend project directory.
+Open a terminal in VSCode and run:
+bash
+Copy code
+npm install
+npm start
+Follow these steps to get the application up and running smoothly.
 
 File structure
 - src
