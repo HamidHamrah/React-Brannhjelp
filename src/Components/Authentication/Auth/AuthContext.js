@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode'; // Corrected import
+import {jwtDecode} from 'jwt-decode'; // Correct import for jwt-decode
 
 const AuthContext = createContext();
 
@@ -16,10 +16,17 @@ export const AuthProvider = ({ children }) => {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
-          // Normalize roles to an array and set user state
+          // Normalize roles and set user state
           const roles = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
           const normalizedRoles = Array.isArray(roles) ? roles : [roles];
-          setUser({ ...decodedToken, roles: normalizedRoles });
+          const userId = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]; // Adjust according to your token
+          const username = decodedToken.sub; // Commonly 'sub' is used for username
+          setUser({
+            ...decodedToken,
+            roles: normalizedRoles,
+            userId: userId,
+            username: username
+          });
         } else {
           setUser(null);
         }
@@ -35,13 +42,20 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post('https://localhost:7207/Auth/login', { email, password });
       if (response.status === 200) {
         Cookies.set('jwtToken', response.data, { secure: true, sameSite: 'Strict' });
-        
+
         // Decode the token, normalize roles, and set user state
         const decodedToken = jwtDecode(response.data);
         const roles = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
         const normalizedRoles = Array.isArray(roles) ? roles : [roles];
-        setUser({ ...decodedToken, roles: normalizedRoles });
-        
+        const userId = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+        const username = decodedToken.sub;
+        setUser({
+          ...decodedToken,
+          roles: normalizedRoles,
+          userId: userId,
+          username: username
+        });
+
         return { success: true };
       }
     } catch (error) {

@@ -35,13 +35,13 @@ function App() {
             <Route path="/Register" element={<Register />} />
             <Route path="/ForgetPassword" element={<ForgetPassword />} />
             <Route path="/ResetPassword" element={<ResetPassword />} />
-
             {/* Protected Routes */}
             <Route path='/create' element={<RequireAuth><Create /></RequireAuth>} />
             <Route path='/All' element={<RequireAuth><AllPub /></RequireAuth>} />
             <Route path="/update/:id" element={<RequireAuth><Update /></RequireAuth>} />
             <Route path='/AllUsers' element={<RequireAuth><AllUsers /></RequireAuth>} />
-            <Route path='/edit-user/:id' element={<RequireAuth><UpdateUser /></RequireAuth>} />
+            <Route path='/edit-user/:id' element={<UpdateUser />} />
+
           </Routes>
         </BrowserRouter>
       </AuthProvider>

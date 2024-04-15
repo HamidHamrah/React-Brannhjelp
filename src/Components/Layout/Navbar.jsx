@@ -27,6 +27,7 @@ const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -54,9 +55,8 @@ const NavBar = () => {
     navigate(path);
   };
 
-  const userName = user ? user.sub : null;
-
-
+  const userName = user ? user.sub + " " + user.acr : null;
+  const userId = user?.userId;
   return (
     <div className="navbar-container">
       {isMobile ? (
@@ -145,12 +145,15 @@ const NavBar = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <MenuItem onClick={() => navigate(`/edit-user/${userId}`)}>Profile</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </Box>
           ) : (
-            <Button variant="outlined" color="primary" className="navbar-login" onClick={() => navigateTo('/Login')}>Login</Button>
+            <Button color="inherit" onClick={() => navigateTo('/Login')}>Login</Button>
           )}
+
+
         </div>
       )}
     </div>

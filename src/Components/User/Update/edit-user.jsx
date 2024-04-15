@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Container, Snackbar, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {jwtDecode} from "jwt-decode"; // Ensure this import is correct
 
 function UserUpdateForm() {
-  // Use ID from the URL parameters
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Initialize user state with ID
   const [user, setUser] = useState({
     id: id,
     userName: '',
@@ -16,14 +15,14 @@ function UserUpdateForm() {
     role: '',
   });
 
+  const [userRole, setUserRole] = useState('');
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
-    severity: 'info', // Can be "error", "warning", "info", "success"
+    severity: 'info',
   });
 
-  // Function to get the cookie value by name
   const getCookieValue = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -31,15 +30,20 @@ function UserUpdateForm() {
   };
 
   useEffect(() => {
-    if (id) { // Only proceed if id is defined
-      const token = getCookieValue('jwtToken');
-      const fetchUrl = `https://localhost:7207/Auth/aboutme?id=${id}`;
+    const token = getCookieValue('jwtToken');
+    if (token) {
+      const decoded = jwtDecode(token);
+      const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']; // Accessing the role from the JWT
+      setUserRole(role);
+    }
 
+    if (id) {
+      const fetchUrl = `https://localhost:7207/Auth/aboutme?id=${id}`;
       const options = {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
       };
 
@@ -54,7 +58,7 @@ function UserUpdateForm() {
           setUser({
             id: id,
             userName: data.userName,
-            lastName:data.lastName,
+            lastName: data.lastName,
             email: data.email,
             role: data.role,
           });
@@ -65,34 +69,23 @@ function UserUpdateForm() {
           setLoading(false);
         });
     }
-  }, [id]); // Depend on ID
+  }, [id]);
 
-
-  // Handle input change
   const handleChange = (event) => {
-    console.log(event.target); // Add this to inspect the event object
     const { name, value } = event.target;
     setUser(prevUser => ({ ...prevUser, [name]: value }));
   };
 
-
-
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = getCookieValue('jwtToken');
-    const updateUrl = `https://localhost:7207/Auth/update-user/${user.id}`; // Using the userId from the user state
-
-    // Adjust the payload to match the API's expected format
+    const updateUrl = `https://localhost:7207/Auth/update-user/${id}`;
     const requestBody = {
       userName: user.userName,
       lastName: user.lastName,
-      newEmail: user.email, // Use newEmail instead of email to match the API's expectation
-      role: user.role,
+      newEmail: user.email,
+      role: user.role || 'Normal', // Default to 'Normal' if role isn't set
     };
-
-    console.log("Sending update request to URL:", updateUrl);
-    console.log("With payload:", requestBody);
 
     try {
       const response = await fetch(updateUrl, {
@@ -112,13 +105,10 @@ function UserUpdateForm() {
       navigate('/AllUsers');
     } catch (error) {
       console.error('Error updating user:', error);
-      setSnackbar({ open: true, message: `Failed to update user due to a network error or other unexpected issue: ${error.message}`, severity: 'error' });
+      setSnackbar({ open: true, message: `Failed to update user: ${error.message}`, severity: 'error' });
     }
   };
 
-
-
-  // Handle snackbar close
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -131,69 +121,26 @@ function UserUpdateForm() {
   return (
     <Container maxWidth="sm">
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="userName"
-          label="Username"
-          name="userName"
-          autoComplete="username"
-          autoFocus
-          value={user.userName}
-          onChange={handleChange}
-        />
+        {/* Text fields for userName, lastName, and email */}
+        <TextField margin="normal" required fullWidth id="userName" label="Username" name="userName" autoComplete="username" autoFocus value={user.userName} onChange={handleChange} />
+        <TextField margin="normal" required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="lastName" value={user.lastName} onChange={handleChange} />
+        <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" value={user.email} onChange={handleChange} />
 
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="lastName"
-          label="lastName"
-          name="lastName"
-          autoComplete="lastName"
-          autoFocus
-          value={user.lastName}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email"
-          name="email"
-          autoComplete="email"
-          value={user.email}
-          onChange={handleChange}
-        />
-        <FormControl fullWidth margin="normal">
-          <InputLabel id="role-label">Role</InputLabel>
-          <Select
-            labelId="role-label"
-            id="role"
-            name="role"
-            value={user.role || ''}
-            label="Role"
-            onChange={handleChange}
-          >
-            <MenuItem value="Normal">Normal</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
-          </Select>
-        </FormControl>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Update User
-        </Button>
+        {/* Conditionally render the role selection based on userRole */}
+        {userRole === 'Admin' && (
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="role-label">Role</InputLabel>
+            <Select labelId="role-label" id="role" name="role" value={user.role || ''} label="Role" onChange={handleChange}>
+              <MenuItem value="Normal">Normal</MenuItem>
+              <MenuItem value="Admin">Admin</MenuItem>
+            </Select>
+          </FormControl>
+        )}
+
+        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Update User</Button>
       </Box>
       <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>{snackbar.message}</Alert>
       </Snackbar>
     </Container>
   );
