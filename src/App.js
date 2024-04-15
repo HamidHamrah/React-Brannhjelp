@@ -6,22 +6,21 @@ import './Components/Layout/NavbarStyle.css';
 import './Components/Publiation/Sidebar/Search.css';
 import "./Components/Publiation/Create/Create.css"
 import "./Components/Publiation/ListDelete/AllPub.css"
-import Login from './Components/Authentication/Auth/LoginRegister/Login';
-import Register from './Components/Authentication/Auth/LoginRegister/Register';
-import ForgetPassword from './Components/Authentication/Auth/ForgetPassword/ForgetPassword';
-import ResetPassword from './Components/Authentication/Auth/ForgetPassword/ResetPassword';
+import Login from './Authentication/Auth/LoginRegister/Login';
+import Register from './Authentication/Auth/LoginRegister/Register';
+import ForgetPassword from './Authentication/Auth/ForgetPassword/ForgetPassword';
+import ResetPassword from './Authentication/Auth/ForgetPassword/ResetPassword';
 import Update from "./Pages/Publication/Update"
 import React from 'react';
-import RequireAuth from "./Components/Authentication/Auth/RequireAuth"
-import {AuthProvider} from "./Components/Authentication/Auth/AuthContext"
-import { useAuth } from './Components/Authentication/Auth/AuthContext';
+import RequireAuth from "./Authentication/Auth/RequireAuth"
+import {AuthProvider} from "./Authentication/Auth/AuthContext"
+import { useAuth } from './Authentication/Auth/AuthContext';
 import AllUsers from "./Pages/User/AllUsers"
 import Read from "../src/Components/Publiation/Read/Read"
 import Copyright from "../src/Components/Layout/Footer"
 import UpdateUser from "./Pages/User/edit-user"
 
 function App() {
-  const { user } = useAuth();
   return (
     <div>
       <AuthProvider>
@@ -35,12 +34,13 @@ function App() {
             <Route path="/Register" element={<Register />} />
             <Route path="/ForgetPassword" element={<ForgetPassword />} />
             <Route path="/ResetPassword" element={<ResetPassword />} />
+            <Route path='/edit-user/:id' element={<UpdateUser />} />
             {/* Protected Routes */}
             <Route path='/create' element={<RequireAuth><Create /></RequireAuth>} />
             <Route path='/All' element={<RequireAuth><AllPub /></RequireAuth>} />
             <Route path="/update/:id" element={<RequireAuth><Update /></RequireAuth>} />
             <Route path='/AllUsers' element={<RequireAuth><AllUsers /></RequireAuth>} />
-            <Route path='/edit-user/:id' element={<UpdateUser />} />
+
 
           </Routes>
         </BrowserRouter>
