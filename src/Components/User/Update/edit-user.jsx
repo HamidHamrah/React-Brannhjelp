@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Container, Snackbar, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {Avatar, TextField, Button, Box, Container, Snackbar, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import {jwtDecode} from "jwt-decode"; // Ensure this import is correct
 
 function UserUpdateForm() {
@@ -122,6 +122,7 @@ function UserUpdateForm() {
     <Container maxWidth="sm">
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         {/* Text fields for userName, lastName, and email */}
+        <Avatar sx={{ margin: 'auto', bgcolor: 'secondary.main' }}></Avatar>
         <TextField margin="normal" required fullWidth id="userName" label="Username" name="userName" autoComplete="username" autoFocus value={user.userName} onChange={handleChange} />
         <TextField margin="normal" required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="lastName" value={user.lastName} onChange={handleChange} />
         <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" value={user.email} onChange={handleChange} />
