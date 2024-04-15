@@ -96,6 +96,7 @@ const NavBar = () => {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={() => navigate(`/edit-user/${userId}`)}>Profile</MenuItem>
                 </Menu>
               </Box>
             ) : (
