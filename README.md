@@ -12,7 +12,6 @@ Running the Application
 Backend Setup:
 
 # Clone the backend repository:
-
   https://github.com/HamidHamrah/Net-Ignist.git
 Install the necessary NuGet packages.
 Run the backend project.
