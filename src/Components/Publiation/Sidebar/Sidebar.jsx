@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Box, TextField, List, ListItem, ListItemText, Collapse, IconButton, ListItemIcon } from '@mui/material';
 import { ExpandMore, ExpandLess, Article as ArticleIcon, Add as AddIcon } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 
 const Sidebar = ({ onArticleSelect }) => {
@@ -14,7 +14,6 @@ const Sidebar = ({ onArticleSelect }) => {
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
 
-  // Helper function to get the value of a cookie by name
   const getCookieValue = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -22,29 +21,30 @@ const Sidebar = ({ onArticleSelect }) => {
   };
 
   useEffect(() => {
-    // Fetch the JWT token from cookies
+    let logoutTimer = null;
     const token = getCookieValue('jwtToken');
     if (token) {
-      // Decode the JWT token
-      const decoded = jwtDecode(token);
-      // Extract the user's role from the decoded token
-      const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-      // Update the userRole state with the extracted role
-      setUserRole(role);
+      try {
+        const decoded = jwtDecode(token);
+        const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        setUserRole(role);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    } else {
+      // Initiate logout after 5 seconds if not logged in
+      logoutTimer = setTimeout(() => {
+        navigate('/login');
+      }, 5000);
     }
 
-    // Define a function to fetch articles
+    // Function to fetch articles
     const fetchArticles = async () => {
       try {
-        // Make a GET request to fetch articles, using the JWT token in the Authorization header
         const response = await axios.get('https://localhost:7207/api/Publications', {
-          headers: {
-            Authorization: `bearer ${token}`, // Ensure the Authorization header is correctly formatted
-          },
+          headers: token ? { Authorization: `bearer ${token}` } : {}
         });
-        setArticles(response.data); // Update the state with the fetched articles
-
-        // Flatten the articles and store them in a map for easy access
+        setArticles(response.data);
         const flatMap = {};
         const flattenArticles = (articles) => {
           articles.forEach(article => {
@@ -61,8 +61,14 @@ const Sidebar = ({ onArticleSelect }) => {
       }
     };
 
-    // Call the fetchArticles function
+    // Call fetchArticles regardless of login status
     fetchArticles();
+
+    return () => {
+      if (logoutTimer) {
+        clearTimeout(logoutTimer);
+      }
+    };
   }, []);
 
 
