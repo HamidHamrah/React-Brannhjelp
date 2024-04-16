@@ -6,15 +6,14 @@ import './Components/Layout/NavbarStyle.css';
 import './Components/Publiation/Sidebar/Search.css';
 import "./Components/Publiation/Create/Create.css"
 import "./Components/Publiation/ListDelete/AllPub.css"
-import Login from './Authentication/Auth/LoginRegister/Login';
-import Register from './Authentication/Auth/LoginRegister/Register';
-import ForgetPassword from './Authentication/Auth/ForgetPassword/ForgetPassword';
-import ResetPassword from './Authentication/Auth/ForgetPassword/ResetPassword';
+import Login from './Authentication/LoginRegister/Login';
+import Register from './Authentication/LoginRegister/Register';
+import ForgetPassword from './Authentication/ForgetPassword/ForgetPassword';
+import ResetPassword from './Authentication/ForgetPassword/ResetPassword';
 import Update from "./Pages/Publication/Update"
 import React from 'react';
-import RequireAuth from "./Authentication/Auth/RequireAuth"
-import {AuthProvider} from "./Authentication/Auth/AuthContext"
-import { useAuth } from './Authentication/Auth/AuthContext';
+import RequireAuth from "./Authentication/RequireAuth"
+import {AuthProvider} from "./Authentication/AuthContext"
 import AllUsers from "./Pages/User/AllUsers"
 import Read from "../src/Components/Publiation/Read/Read"
 import Copyright from "../src/Components/Layout/Footer"
