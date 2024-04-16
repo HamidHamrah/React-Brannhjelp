@@ -83,8 +83,8 @@ const Read = ({ selectedArticleId, onSelectArticle }) => {
 
   const cleanHTML = DOMPurify.sanitize(article.content);
   return (
-    <Card raised sx={{
-      width: '70%', margin: 'auto', mt: 5, overflow: 'hidden', maxHeight: '85vh', display: 'flex', flexDirection: 'column'
+    <Card elevation={0} sx={{
+      width: '70%', margin: 'auto', mt: 2, overflow: 'hidden', maxHeight: '85vh', display: 'flex', flexDirection: 'column'
     }}>
       <CardContent sx={{ padding: '16px' }}>
         <Typography variant="h4" component="h1" gutterBottom>
