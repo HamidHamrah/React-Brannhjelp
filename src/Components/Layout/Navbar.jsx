@@ -13,7 +13,7 @@ import { useTheme } from '@mui/material/styles';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Box from '@mui/material/Box';
 import Logo from "./Logo.png";
-import { useAuth } from '../../Authentication/Auth/AuthContext'; // Import useAuth hook
+import { useAuth } from '../../Authentication/AuthContext';
 import HomeIcon from '@mui/icons-material/Home';
 import CreateIcon from '@mui/icons-material/Create';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
