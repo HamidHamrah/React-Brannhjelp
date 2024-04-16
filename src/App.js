@@ -3,9 +3,9 @@ import Home from "./Pages/Publication/Home"
 import Create from './Pages/Publication/Create';
 import AllPub from "./Pages/Publication/ListAllpublications"
 import './Components/Layout/NavbarStyle.css';
-import './Components/Publiation/Sidebar/Search.css';
-import "./Components/Publiation/Create/Create.css"
-import "./Components/Publiation/ListDelete/AllPub.css"
+import './Components/Publication/Sidebar/Search.css';
+import "./Components/Publication/Create/Create.css"
+import "./Components/Publication/ListDelete/AllPub.css"
 import Login from './Authentication/LoginRegister/Login';
 import Register from './Authentication/LoginRegister/Register';
 import ForgetPassword from './Authentication/ForgetPassword/ForgetPassword';
@@ -15,7 +15,7 @@ import React from 'react';
 import RequireAuth from "./Authentication/RequireAuth"
 import {AuthProvider} from "./Authentication/AuthContext"
 import AllUsers from "./Pages/User/AllUsers"
-import Read from "../src/Components/Publiation/Read/Read"
+import Read from "../src/Components/Publication/Read/Read"
 import Copyright from "../src/Components/Layout/Footer"
 import UpdateUser from "./Pages/User/edit-user"
 

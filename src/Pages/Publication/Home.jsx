@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Sidebar from '../../Components/Publiation/Sidebar/Sidebar'; // Corrected import path
-import ArticleDisplay from '../../Components/Publiation/Read/Read'; // Corrected import path
+import Sidebar from '../../Components/Publication/Sidebar/Sidebar'; // Corrected import path
+import ArticleDisplay from '../../Components/Publication/Read/Read'; // Corrected import path
 import Navbar from "../../Components/Layout/Navbar";
 
 const Home = () => {
