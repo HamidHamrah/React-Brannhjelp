@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Sidebar from '../../Components/Publication/Sidebar/Sidebar'; // Corrected import path
-import ArticleDisplay from '../../Components/Publication/Read/Read'; // Corrected import path
-import Navbar from "../../Components/Layout/Navbar";
+import Sidebar from '../../Components/Publication/Sidebar/Sidebar.tsx'; // Corrected import path
+import ArticleDisplay from '../../Components/Publication/Read/Read.tsx'; // Corrected import path
+import Navbar from "../../Components/Layout/Navbar.tsx";
 
 const Home = () => {
   const [selectedArticleId, setSelectedArticleId] = useState(null);

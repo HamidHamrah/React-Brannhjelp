@@ -1,23 +1,23 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from "./Pages/Publication/Home"
-import Create from './Pages/Publication/Create';
-import AllPub from "./Pages/Publication/ListAllpublications"
+import Home from "./Pages/Publication/Home.tsx"
+import Create from './Pages/Publication/Create.tsx';
+import AllPub from "./Pages/Publication/ListAllpublications.tsx"
 import './Components/Layout/NavbarStyle.css';
 import './Components/Publication/Sidebar/Search.css';
 import "./Components/Publication/Create/Create.css"
 import "./Components/Publication/ListDelete/AllPub.css"
-import Login from './Authentication/LoginRegister/Login';
-import Register from './Authentication/LoginRegister/Register';
-import ForgetPassword from './Authentication/ForgetPassword/ForgetPassword';
-import ResetPassword from './Authentication/ForgetPassword/ResetPassword';
-import Update from "./Pages/Publication/Update"
+import Login from './Authentication/LoginRegister/Login.tsx';
+import Register from './Authentication/LoginRegister/Register.tsx';
+import ForgetPassword from './Authentication/ForgetPassword/ForgetPassword.tsx';
+import ResetPassword from './Authentication/ForgetPassword/ResetPassword.tsx';
+import Update from "./Pages/Publication/Update.tsx"
 import React from 'react';
-import RequireAuth from "./Authentication/RequireAuth"
-import {AuthProvider} from "./Authentication/AuthContext"
-import AllUsers from "./Pages/User/AllUsers"
-import Read from "../src/Components/Publication/Read/Read"
-import Copyright from "../src/Components/Layout/Footer"
-import UpdateUser from "./Pages/User/edit-user"
+import RequireAuth from "./Authentication/RequireAuth.jsx"
+import {AuthProvider} from "./Authentication/AuthContext.jsx"
+import AllUsers from "./Pages/User/AllUsers.tsx"
+import Read from "../src/Components/Publication/Read/Read.tsx"
+import Copyright from "../src/Components/Layout/Footer.tsx"
+import UpdateUser from "./Pages/User/edit-user.tsx"
 
 function App() {
   return (

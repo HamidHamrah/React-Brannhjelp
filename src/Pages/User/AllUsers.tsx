@@ -1,6 +1,6 @@
 import React from 'react'
-import Navbar from "../../Components/Layout/Navbar";
-import AllUser from "../../Components/User/AllUser/AllUser"
+import Navbar from "../../Components/Layout/Navbar.tsx";
+import AllUser from "../../Components/User/AllUser/AllUser.tsx"
 export default function Create() {
   return (
     <div>
