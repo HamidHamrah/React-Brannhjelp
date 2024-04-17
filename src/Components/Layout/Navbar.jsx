@@ -18,15 +18,36 @@ import HomeIcon from '@mui/icons-material/Home';
 import CreateIcon from '@mui/icons-material/Create';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import {jwtDecode} from 'jwt-decode';  // Ensure jwt-decode is imported
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const { user, logout } = useAuth(); // Destructure logout function from useAuth
+  const { user, logout } = useAuth();
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  const getCookieValue = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  useEffect(() => {
+    const token = getCookieValue('jwtToken');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        setUserRole(role);
+      } catch (error) {
+        console.error("Failed to decode JWT or invalid token", error);
+      }
+    }
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -45,9 +66,9 @@ const NavBar = () => {
   };
 
   const handleLogout = () => {
-    logout(); // Use centralized logout logic
-    handleCloseUserMenu(); // Close the user menu
-    navigate('/Home'); // Redirect to login page
+    logout();
+    handleCloseUserMenu();
+    navigate('/Home');
   };
 
   const navigateTo = (path) => {
@@ -67,9 +88,13 @@ const NavBar = () => {
             </IconButton>
             <Menu id="menu-appbar" anchorEl={anchorElNav} anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'left', }} open={Boolean(anchorElNav)} onClose={handleCloseNavMenu}>
               <MenuItem onClick={() => navigateTo('/home')}>Home</MenuItem>
-              <MenuItem onClick={() => navigateTo('/All')}>All Publications</MenuItem>
-              <MenuItem onClick={() => navigateTo('/create')}>Create</MenuItem>
-              <MenuItem onClick={() => navigateTo('/#')}>Mange user</MenuItem>
+              {userRole === 'Admin' && (
+                <>
+                  <MenuItem onClick={() => navigateTo('/All')}>All Publications</MenuItem>
+                  <MenuItem onClick={() => navigateTo('/create')}>Create</MenuItem>
+                  <MenuItem onClick={() => navigateTo('/AllUsers')}>Manage User</MenuItem>
+                </>
+              )}
             </Menu>
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
               Ignist
@@ -104,7 +129,6 @@ const NavBar = () => {
             )}
           </Toolbar>
         </AppBar>
-
       ) : (
         <div className="navbar-item">
           <a href="/home">
@@ -115,15 +139,19 @@ const NavBar = () => {
             <MenuItem onClick={() => navigateTo('/home')}>
               <HomeIcon sx={{ mr: 1 }} /> Home {/* Home Icon */}
             </MenuItem>
-            <MenuItem onClick={() => navigateTo('/create')}>
-              <CreateIcon sx={{ mr: 1 }} /> Create {/* Create Icon */}
-            </MenuItem>
-            <MenuItem onClick={() => navigateTo('/All')}>
-              <LibraryBooksIcon sx={{ mr: 1 }} /> All Publications {/* LibraryBooks Icon */}
-            </MenuItem>
-            <MenuItem onClick={() => navigateTo('/AllUsers')}>
-              <PeopleAltIcon sx={{ mr: 1 }} /> Manage user {/* PeopleAlt Icon */}
-            </MenuItem>
+            {userRole === 'Admin' && (
+              <>
+                <MenuItem onClick={() => navigateTo('/create')}>
+                  <CreateIcon sx={{ mr: 1 }} /> Create {/* Create Icon */}
+                </MenuItem>
+                <MenuItem onClick={() => navigateTo('/All')}>
+                  <LibraryBooksIcon sx={{ mr: 1 }} /> All Publications {/* LibraryBooks Icon */}
+                </MenuItem>
+                <MenuItem onClick={() => navigateTo('/AllUsers')}>
+                  <PeopleAltIcon sx={{ mr: 1 }} /> Manage user {/* PeopleAlt Icon */}
+                </MenuItem>
+              </>
+            )}
           </div>
           {userName ? (
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -153,8 +181,6 @@ const NavBar = () => {
           ) : (
             <Button color="inherit" onClick={() => navigateTo('/Login')}>Login</Button>
           )}
-
-
         </div>
       )}
     </div>
