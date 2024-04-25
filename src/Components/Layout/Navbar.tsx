@@ -97,7 +97,7 @@ const NavBar = () => {
               )}
             </Menu>
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-              Ignist
+              Brannhjelp
             </Typography>
             {userName ? (
               <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -134,7 +134,7 @@ const NavBar = () => {
           <a href="/home">
             <img src={Logo} alt="Logo" className="navbar-logo" />
           </a>
-          <Typography variant="h5" component="div" className="navbar-title">Ignist</Typography>
+          <Typography variant="h5" component="div" className="navbar-title">Brannhjelp</Typography>
           <div className="navbar-links">
             <MenuItem onClick={() => navigateTo('/home')}>
               <HomeIcon sx={{ mr: 1 }} /> Home {/* Home Icon */}
