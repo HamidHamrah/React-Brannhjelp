@@ -12,7 +12,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Box from '@mui/material/Box';
-import Logo from "./Logo.png";
+import Logo from "./Logo.jpg";
 import { useAuth } from '../../Authentication/AuthContext';
 import HomeIcon from '@mui/icons-material/Home';
 import CreateIcon from '@mui/icons-material/Create';
@@ -96,9 +96,6 @@ const NavBar = () => {
                 </>
               )}
             </Menu>
-            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-              Brannhjelp
-            </Typography>
             {userName ? (
               <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                 <IconButton onClick={handleOpenUserMenu} color="inherit" sx={{ p: 0 }}>
@@ -132,9 +129,8 @@ const NavBar = () => {
       ) : (
         <div className="navbar-item">
           <a href="/home">
-            <img src={Logo} alt="Logo" className="navbar-logo" />
+          <img src={Logo} alt="Logo" className="navbar-logo" style={{ height:"40px "}} />
           </a>
-          <Typography variant="h5" component="div" className="navbar-title">Brannhjelp</Typography>
           <div className="navbar-links">
             <MenuItem onClick={() => navigateTo('/home')}>
               <HomeIcon sx={{ mr: 1 }} /> Home {/* Home Icon */}

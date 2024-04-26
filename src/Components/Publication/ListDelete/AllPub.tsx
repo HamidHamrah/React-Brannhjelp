@@ -5,8 +5,6 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton,
   Snackbar, Alert
 } from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -14,7 +12,6 @@ export default function Read() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
-  const [sortDirection, setSortDirection] = useState('asc');
   const UserID = 'Hamid';
   const navigate = useNavigate();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -44,9 +41,6 @@ export default function Read() {
     .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
-  const toggleSortDirection = () => {
-    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  };
 
   const renderRows = (items, level = 0) => {
     return items.map((item) => (
@@ -141,9 +135,6 @@ export default function Read() {
           <TableHead>
             <TableRow>
               <TableCell>ID
-                <IconButton onClick={toggleSortDirection} size="small">
-                  {sortDirection === 'asc' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
-                </IconButton>
               </TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Actions</TableCell>

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {Avatar, TextField, Button, Box, Container, Snackbar, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import {jwtDecode} from "jwt-decode"; // Ensure this import is correct
+import { Avatar, TextField, Button, Box, Container, Snackbar, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {jwtDecode} from 'jwt-decode';
 
 function UserUpdateForm() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
-    id: id,
     userName: '',
     lastName: '',
     email: '',
@@ -16,6 +15,12 @@ function UserUpdateForm() {
   });
 
   const [userRole, setUserRole] = useState('');
+  const [errors, setErrors] = useState({
+    userName: '',
+    lastName: '',
+    email: '',
+  });
+
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -48,15 +53,9 @@ function UserUpdateForm() {
       };
 
       fetch(fetchUrl, options)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch user data');
-          }
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           setUser({
-            id: id,
             userName: data.userName,
             lastName: data.lastName,
             email: data.email,
@@ -67,17 +66,51 @@ function UserUpdateForm() {
         .catch(error => {
           console.error('Error fetching user:', error);
           setLoading(false);
+          setSnackbar({ open: true, message: `Failed to fetch data: ${error.message}`, severity: 'error' });
         });
     }
   }, [id]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setUser(prevUser => ({ ...prevUser, [name]: value }));
+    setUser(prev => ({ ...prev, [name]: value }));
+    validateField(name, value);
+  };
+
+  const validateField = (fieldName, value) => {
+    let errorMsg = '';
+
+    switch (fieldName) {
+      case 'userName':
+      case 'lastName':
+        if (!value.trim()) errorMsg = 'This field cannot be empty';
+        break;
+      case 'email':
+        if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)) errorMsg = 'Invalid email format';
+        break;
+      default:
+        break;
+    }
+
+    setErrors(prev => ({ ...prev, [fieldName]: errorMsg }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validation on submit for all fields
+    const fieldsToValidate = ['userName', 'lastName', 'email'];
+    let isValid = true;
+    fieldsToValidate.forEach(field => {
+      validateField(field, user[field]);
+      if (errors[field]) isValid = false;
+    });
+
+    if (!isValid) {
+      setSnackbar({ open: true, message: 'Please correct the errors before submitting.', severity: 'error' });
+      return;
+    }
+
     const token = getCookieValue('jwtToken');
     const updateUrl = `https://localhost:7207/Auth/update-user/${id}`;
     const requestBody = {
@@ -121,27 +154,71 @@ function UserUpdateForm() {
   return (
     <Container maxWidth="sm">
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        {/* Text fields for userName, lastName, and email */}
         <Avatar sx={{ margin: 'auto', bgcolor: 'secondary.main' }}></Avatar>
-        <TextField margin="normal" required fullWidth id="userName" label="Username" name="userName" autoComplete="username" autoFocus value={user.userName} onChange={handleChange} />
-        <TextField margin="normal" required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="lastName" value={user.lastName} onChange={handleChange} />
-        <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" value={user.email} onChange={handleChange} />
-
-        {/* Conditionally render the role selection based on userRole */}
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="userName"
+          label="Username"
+          name="userName"
+          autoComplete="username"
+          autoFocus
+          value={user.userName}
+          onChange={handleChange}
+          error={!!errors.userName}
+          helperText={errors.userName}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="lastName"
+          label="Last Name"
+          name="lastName"
+          autoComplete="lastName"
+          value={user.lastName}
+          onChange={handleChange}
+          error={!!errors.lastName}
+          helperText={errors.lastName}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email"
+          name="email"
+          autoComplete="email"
+          value={user.email}
+          onChange={handleChange}
+          error={!!errors.email}
+          helperText={errors.email}
+        />
         {userRole === 'Admin' && (
           <FormControl fullWidth margin="normal">
             <InputLabel id="role-label">Role</InputLabel>
-            <Select labelId="role-label" id="role" name="role" value={user.role || ''} label="Role" onChange={handleChange}>
+            <Select
+              labelId="role-label"
+              id="role"
+              name="role"
+              value={user.role || ''}
+              label="Role"
+              onChange={handleChange}
+            >
               <MenuItem value="Normal">Normal</MenuItem>
               <MenuItem value="Admin">Admin</MenuItem>
             </Select>
           </FormControl>
         )}
-
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Update User</Button>
+        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          Update User
+        </Button>
       </Box>
       <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>{snackbar.message}</Alert>
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
       </Snackbar>
     </Container>
   );
